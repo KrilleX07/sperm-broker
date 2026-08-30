@@ -345,7 +345,7 @@ export default function AllowlistIntake() {
             {/* X Username Field */}
             <div className="space-y-2">
               <label className="block font-pixel text-[10px] text-slate-300 uppercase tracking-wider">
-                X USERNAME <span className="text-slate-500 font-mono text-[9px]">(Latin only)</span>
+                X USERNAME
               </label>
               <input
                 type="text"
