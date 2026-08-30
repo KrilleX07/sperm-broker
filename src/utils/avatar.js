@@ -1,5 +1,5 @@
 /**
- * Robust real-time Twitter/X profile avatar resolver
+ * Multi-fallback Twitter/X profile avatar resolver
  */
 const avatarCache = {};
 
@@ -11,21 +11,21 @@ export async function fetchTwitterAvatar(username) {
     return avatarCache[clean];
   }
 
-  // 1. Try our dedicated Vercel Serverless Function /api/avatar
+  // 1. Try Vercel Serverless Function
   try {
     const res = await fetch(`/api/avatar?username=${clean}`);
     if (res.ok) {
       const data = await res.json();
-      if (data?.avatarUrl && (data.avatarUrl.includes('twimg.com') || data.avatarUrl.startsWith('http'))) {
+      if (data?.avatarUrl && data.avatarUrl.includes('twimg.com')) {
         avatarCache[clean] = data.avatarUrl;
         return data.avatarUrl;
       }
     }
   } catch (e) {
-    console.warn('Local API avatar fetch notice:', e);
+    // Ignore local error
   }
 
-  // 2. Try Microlink direct public API
+  // 2. Try Microlink direct CORS API (Returns real pbs.twimg.com image)
   try {
     const res = await fetch(`https://api.microlink.io/?url=https://x.com/${clean}`);
     if (res.ok) {
@@ -37,8 +37,10 @@ export async function fetchTwitterAvatar(username) {
       }
     }
   } catch (e) {
-    console.warn('Microlink avatar fetch notice:', e);
+    // Ignore error
   }
 
-  return null;
+  // 3. Fallback unavatar
+  const fallbackUrl = `https://unavatar.io/twitter/${clean}`;
+  return fallbackUrl;
 }
