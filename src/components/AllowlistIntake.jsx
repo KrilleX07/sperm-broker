@@ -4,7 +4,7 @@ import confetti from 'canvas-confetti';
 import { registerWhitelistUser } from '../utils/supabase';
 import { sound } from '../utils/sound';
 
-export default function AllowlistIntake({ onGoToLeaderboard }) {
+export default function AllowlistIntake() {
   const [currentStep, setCurrentStep] = useState(1);
   const [twitterUsername, setTwitterUsername] = useState('');
   const [inviteCode, setInviteCode] = useState('');
@@ -118,7 +118,7 @@ export default function AllowlistIntake({ onGoToLeaderboard }) {
     const myRefCode = `${usernameSlug}-${randomSuffix}`;
 
     try {
-      const res = await registerWhitelistUser({
+      await registerWhitelistUser({
         wallet: cleanWallet,
         twitter: twitterUsername,
         inviteCode: inviteCode || null,
@@ -164,7 +164,7 @@ export default function AllowlistIntake({ onGoToLeaderboard }) {
 
   const tweetShareText = completedData
     ? encodeURIComponent(
-        `Just submitted my desk intake for the @SpermBrokers Genesis Allowlist on Robinhood Chain! 🧬\n\nUse my invite code to get on the floor: ${completedData.myRefCode}\n\nApply here: ${completedData.refLink}`
+        `Just submitted my desk intake for the @SpermBrokers Genesis Allowlist on Robinhood Chain! 🧬\n\nUse my invite code: ${completedData.myRefCode}\n\nApply here: ${completedData.refLink}`
       )
     : '';
 
@@ -547,33 +547,22 @@ export default function AllowlistIntake({ onGoToLeaderboard }) {
               </div>
 
               <p className="font-mono text-[11px] text-slate-400 leading-relaxed">
-                ⚡ Share your invite code with friends to climb the <span className="text-[#00F58C] font-bold">Top Sperm Brokers Leaderboard</span> for guaranteed allocation boosts.
+                ⚡ Share your invite code with fellow traders to secure guaranteed allocation and early mint access.
               </p>
             </div>
 
             {/* Action CTAs */}
-            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+            <div className="pt-2">
               <a
                 href={`https://twitter.com/intent/tweet?text=${tweetShareText}`}
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => sound.playCash()}
-                className="flex-1 py-3.5 px-4 rounded-xl bg-[#00F58C] hover:bg-[#25FF9C] text-black font-pixel text-[10px] uppercase flex items-center justify-center gap-2 shadow-lg shadow-[#00F58C]/20 transition"
+                className="w-full py-4 px-4 rounded-xl bg-[#00F58C] hover:bg-[#25FF9C] text-black font-pixel text-[11px] uppercase flex items-center justify-center gap-2 shadow-lg shadow-[#00F58C]/20 transition hover:scale-[1.01]"
               >
-                <Share2 size={14} />
+                <Share2 size={15} />
                 <span>SHARE ON X (+10 PTS)</span>
               </a>
-
-              <button
-                onClick={() => {
-                  sound.playClick();
-                  onGoToLeaderboard();
-                }}
-                className="flex-1 py-3.5 px-4 rounded-xl bg-white/10 hover:bg-white/20 text-white font-pixel text-[10px] uppercase flex items-center justify-center gap-2 border border-white/15 transition"
-              >
-                <span>VIEW LEADERBOARD</span>
-                <ArrowRight size={14} />
-              </button>
             </div>
 
           </div>

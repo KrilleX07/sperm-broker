@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import Navbar from './components/Navbar';
 import AllowlistIntake from './components/AllowlistIntake';
-import Leaderboard from './components/Leaderboard';
 import Footer from './components/Footer';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState('intake'); // 'intake' or 'leaderboard'
   const [isAudioOn, setIsAudioOn] = useState(true);
 
   return (
@@ -15,19 +13,13 @@ export default function App() {
 
       {/* Top Navbar */}
       <Navbar
-        currentView={currentView}
-        setCurrentView={setCurrentView}
         isAudioOn={isAudioOn}
         setIsAudioOn={setIsAudioOn}
       />
 
-      {/* Main View Container */}
+      {/* Main Content: Allowlist Intake Form */}
       <main className="relative z-10 flex-1 flex flex-col justify-center">
-        {currentView === 'intake' ? (
-          <AllowlistIntake onGoToLeaderboard={() => setCurrentView('leaderboard')} />
-        ) : (
-          <Leaderboard onGoToIntake={() => setCurrentView('intake')} />
-        )}
+        <AllowlistIntake />
       </main>
 
       {/* Minimalist Footer */}

@@ -2,7 +2,7 @@ import React from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 import { sound } from '../utils/sound';
 
-export default function Navbar({ currentView, setCurrentView, isAudioOn, setIsAudioOn }) {
+export default function Navbar({ isAudioOn, setIsAudioOn }) {
   const toggleSound = () => {
     sound.enabled = !isAudioOn;
     setIsAudioOn(!isAudioOn);
@@ -14,48 +14,22 @@ export default function Navbar({ currentView, setCurrentView, isAudioOn, setIsAu
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         
         {/* Left: Pixel Title (No emojis, no boxes) */}
-        <button
-          onClick={() => {
-            sound.playClick();
-            setCurrentView('intake');
-          }}
+        <a
+          href="#"
+          onClick={() => sound.playClick()}
           className="text-left group"
         >
           <span className="font-pixel text-[#00F58C] text-xs sm:text-sm tracking-wider hover:brightness-125 transition-all text-neon-green">
             SPERM BROKERS
           </span>
-        </button>
+        </a>
 
         {/* Right Navigation */}
-        <nav className="flex items-center gap-4 sm:gap-8 font-pixel text-[10px] sm:text-xs">
+        <nav className="flex items-center gap-5 sm:gap-8 font-pixel text-[10px] sm:text-xs">
           
-          <button
-            onClick={() => {
-              sound.playClick();
-              setCurrentView('intake');
-            }}
-            className={`transition-colors uppercase tracking-wider py-1 ${
-              currentView === 'intake'
-                ? 'text-[#00F58C] border-b-2 border-[#00F58C]'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
+          <span className="text-[#00F58C] border-b-2 border-[#00F58C] pb-1 uppercase tracking-wider">
             ALLOWLIST
-          </button>
-
-          <button
-            onClick={() => {
-              sound.playClick();
-              setCurrentView('leaderboard');
-            }}
-            className={`transition-colors uppercase tracking-wider py-1 ${
-              currentView === 'leaderboard'
-                ? 'text-[#00F58C] border-b-2 border-[#00F58C]'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            LEADERBOARD
-          </button>
+          </span>
 
           <a
             href="https://x.com/SpermBrokers"
@@ -70,7 +44,7 @@ export default function Navbar({ currentView, setCurrentView, isAudioOn, setIsAu
           {/* Sound Toggle */}
           <button
             onClick={toggleSound}
-            title={isAudioOn ? 'Mute chiptune sound' : 'Enable sound'}
+            title={isAudioOn ? 'Mute sound' : 'Enable sound'}
             className="p-2 rounded-lg text-slate-500 hover:text-[#00F58C] transition"
           >
             {isAudioOn ? <Volume2 size={16} className="text-[#00F58C]" /> : <VolumeX size={16} />}
