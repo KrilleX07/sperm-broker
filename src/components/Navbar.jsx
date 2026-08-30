@@ -13,7 +13,7 @@ export default function Navbar({ isAudioOn, setIsAudioOn }) {
     <header className="w-full bg-[#05070B] border-b border-[#1E293B] sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         
-        {/* Left: Pixel Title (No emojis, no boxes) */}
+        {/* Left: Pixel Title */}
         <a
           href="#"
           onClick={() => sound.playClick()}
@@ -27,10 +27,6 @@ export default function Navbar({ isAudioOn, setIsAudioOn }) {
         {/* Right Navigation */}
         <nav className="flex items-center gap-5 sm:gap-8 font-pixel text-[10px] sm:text-xs">
           
-          <span className="text-[#00F58C] border-b-2 border-[#00F58C] pb-1 uppercase tracking-wider">
-            ALLOWLIST
-          </span>
-
           <a
             href="https://x.com/SpermBrokers"
             target="_blank"
