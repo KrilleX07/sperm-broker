@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Volume2, VolumeX, Wallet, ShieldCheck, Menu, X, Sparkles, TrendingUp } from 'lucide-react';
+import { Volume2, VolumeX, Wallet, ShieldCheck, Menu, X, Sparkles, TrendingUp, Lock } from 'lucide-react';
 import { sound } from '../utils/sound';
 
 export default function Navbar({ isAudioOn, setIsAudioOn, wallet, onOpenWallet }) {
@@ -30,11 +30,11 @@ export default function Navbar({ isAudioOn, setIsAudioOn, wallet, onOpenWallet }
             ROBINHOOD CHAIN MAINNET: LIVE
           </span>
           <span className="text-slate-400">|</span>
-          <span className="text-emerald-400 flex items-center gap-1">
-            <TrendingUp size={12} /> $SPRM $0.420 (+69.42%)
+          <span className="text-amber-400 flex items-center gap-1">
+            <Lock size={12} /> STAKING VAULT: PHASE 2 COMING SOON
           </span>
           <span className="text-slate-400">|</span>
-          <span className="text-amber-400">FLOOR: 0.088 ETH</span>
+          <span className="text-emerald-400">FLOOR: 0.088 ETH</span>
           <span className="text-slate-400">|</span>
           <span className="text-cyan-400">TOTAL VOLUME: 420.69 ETH</span>
           <span className="text-slate-400">|</span>
@@ -50,11 +50,11 @@ export default function Navbar({ isAudioOn, setIsAudioOn, wallet, onOpenWallet }
             ROBINHOOD CHAIN MAINNET: LIVE
           </span>
           <span className="text-slate-400">|</span>
-          <span className="text-emerald-400 flex items-center gap-1">
-            <TrendingUp size={12} /> $SPRM $0.420 (+69.42%)
+          <span className="text-amber-400 flex items-center gap-1">
+            <Lock size={12} /> STAKING VAULT: PHASE 2 COMING SOON
           </span>
           <span className="text-slate-400">|</span>
-          <span className="text-amber-400">FLOOR: 0.088 ETH</span>
+          <span className="text-emerald-400">FLOOR: 0.088 ETH</span>
         </div>
       </div>
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Sparkles, ChevronLeft, ChevronRight, Zap, Shield, Flame, ExternalLink } from 'lucide-react';
-import { NFT_COLLECTION, STATS } from '../data/nfts';
+import { ArrowRight, Sparkles, ChevronLeft, ChevronRight, Zap, Shield, Flame, ExternalLink, Lock } from 'lucide-react';
+import { NFT_COLLECTION } from '../data/nfts';
 import { sound } from '../utils/sound';
 
 export default function Hero({ onSelectNFT }) {
@@ -82,8 +82,8 @@ export default function Hero({ onSelectNFT }) {
                 onClick={() => sound.playClick()}
                 className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 hover:border-hood-green/40 text-white font-bold text-base flex items-center justify-center gap-2 transition duration-300"
               >
-                <Zap size={18} className="text-cyber-gold" />
-                <span>Staking Protocol (Soon)</span>
+                <Lock size={16} className="text-amber-400" />
+                <span>Staking Vault (Soon)</span>
               </a>
             </div>
 
@@ -181,8 +181,8 @@ export default function Hero({ onSelectNFT }) {
                     </div>
                     <div className="text-right">
                       <div className="text-xs text-slate-400 font-mono">Staking</div>
-                      <div className="text-sm font-bold text-hood-green font-mono">
-                        +{currentNFT.stakingYield} $SPRM/d
+                      <div className="text-xs font-bold text-amber-400 font-mono flex items-center gap-1">
+                        <Lock size={11} /> Phase 2 Soon
                       </div>
                     </div>
                   </div>

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { X, Download, Zap, Sparkles, Shield, Award, Quote } from 'lucide-react';
+import { X, Download, Lock, Sparkles, Shield, Award, Quote } from 'lucide-react';
 import { sound } from '../utils/sound';
 
 export default function NFTModal({ nft, onClose }) {
@@ -90,7 +90,7 @@ export default function NFTModal({ nft, onClose }) {
             </button>
           </div>
 
-          {/* Right Column: Dossier, Lore, Traits & Yield */}
+          {/* Right Column: Dossier, Lore, Traits & Status */}
           <div className="md:col-span-7 p-6 sm:p-8 space-y-6 max-h-[80vh] overflow-y-auto">
             
             {/* Header / Title */}
@@ -130,16 +130,16 @@ export default function NFTModal({ nft, onClose }) {
               </p>
             </div>
 
-            {/* Staking Yield Card */}
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/60 to-black border border-hood-green/30 flex items-center justify-between">
+            {/* Staking Protocol Teaser Box */}
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-950/40 to-black border border-amber-500/30 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-hood-green/20 text-hood-green">
-                  <Zap size={20} />
+                <div className="p-2.5 rounded-xl bg-amber-500/20 text-amber-400">
+                  <Lock size={18} />
                 </div>
                 <div>
-                  <div className="text-xs font-mono text-slate-400">Passive $SPRM Staking Yield</div>
-                  <div className="text-lg font-bold text-hood-green font-mono">
-                    +{nft.stakingYield} $SPRM / day
+                  <div className="text-xs font-mono text-slate-400">Phase 2 Staking Protocol</div>
+                  <div className="text-sm font-bold text-amber-300 font-mono">
+                    Eligible for Vault Yield
                   </div>
                 </div>
               </div>

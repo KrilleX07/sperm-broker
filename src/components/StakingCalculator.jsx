@@ -1,190 +1,109 @@
-import React, { useState } from 'react';
-import { Coins, Check, Zap, Lock, Sparkles, Clock, ShieldCheck } from 'lucide-react';
-import { NFT_COLLECTION } from '../data/nfts';
+import React from 'react';
+import { Lock, Shield, Sparkles, Zap, Coins, Flame, ArrowUpRight } from 'lucide-react';
 import { sound } from '../utils/sound';
 
 export default function StakingCalculator() {
-  const [selectedIds, setSelectedIds] = useState(['001', '003', '011']);
-
-  const toggleBroker = (id) => {
-    sound.playClick();
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
-  };
-
-  const handleSelectAll = () => {
-    sound.playClick();
-    if (selectedIds.length === NFT_COLLECTION.length) {
-      setSelectedIds([]);
-    } else {
-      setSelectedIds(NFT_COLLECTION.map((n) => n.id));
+  const teaserFeatures = [
+    {
+      icon: Lock,
+      color: 'text-hood-green',
+      border: 'border-hood-green/30 hover:border-hood-green',
+      bg: 'bg-hood-green/10',
+      title: 'Non-Custodial Vault',
+      desc: 'Lock your Sperm Brokers securely in the protocol while retaining full ownership of your NFTs.'
+    },
+    {
+      icon: Coins,
+      color: 'text-cyber-gold',
+      border: 'border-cyber-gold/30 hover:border-cyber-gold',
+      bg: 'bg-cyber-gold/10',
+      title: '$SPRM Ecosystem Yield',
+      desc: 'Earn native $SPRM utility rewards and secondary marketplace royalty dividends based on character rarity.'
+    },
+    {
+      icon: Zap,
+      color: 'text-cyber-cyan',
+      border: 'border-cyber-cyan/30 hover:border-cyber-cyan',
+      bg: 'bg-cyber-cyan/10',
+      title: 'Whale Alpha Lounge',
+      desc: 'Staking activates VIP Discord channels, institutional trading terminal access, and MEV sniper tools.'
     }
-  };
-
-  // Compute metrics
-  const selectedNFTs = NFT_COLLECTION.filter((n) => selectedIds.includes(n.id));
-  const dailyYield = selectedNFTs.reduce((sum, n) => sum + n.stakingYield, 0);
-  const monthlyYield = dailyYield * 30;
-  const tokenPriceUsd = 0.42;
-  const monthlyValueUsd = (monthlyYield * tokenPriceUsd).toFixed(2);
+  ];
 
   return (
-    <section id="staking" className="py-24 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="staking" className="py-24 relative overflow-hidden">
+      {/* Background glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-hood-green/5 rounded-full blur-[150px] pointer-events-none"></div>
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Title */}
         <div className="text-center space-y-4 mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-mono font-bold tracking-wider animate-pulse">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-hood-green/10 border border-hood-green/30 text-hood-green text-xs font-mono font-bold tracking-wider animate-pulse">
             <Lock size={14} />
-            <span>DEFI PROTOCOL • COMING SOON</span>
+            <span>PHASE 2 PROTOCOL • COMING SOON</span>
           </div>
-          <h2 className="text-4xl sm:text-5xl font-extrabold font-display text-white tracking-tight">
-            $SPRM Staking Vault
+          <h2 className="text-4xl sm:text-6xl font-extrabold font-display text-white tracking-tight">
+            Staking Vault <span className="text-hood-green">Soon...</span>
           </h2>
           <p className="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">
-            Preview your prospective daily $SPRM yield before official mainnet launch. Non-custodial staking contracts are scheduled for Phase 2 on Robinhood Chain.
+            The non-custodial smart contracts are currently undergoing development and testing for the Robinhood Chain ecosystem.
           </p>
         </div>
 
-        {/* Interactive Staking Interface */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Central High-Tech Locked Vault Card */}
+        <div className="relative rounded-3xl p-8 sm:p-14 glass-panel-glow border border-white/15 shadow-2xl overflow-hidden text-center space-y-10">
           
-          {/* Left Col: Broker Selector Grid */}
-          <div className="lg:col-span-7 bg-[#0D111A]/90 rounded-3xl p-6 sm:p-8 border border-white/10 space-y-6">
-            
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-bold text-white font-display">
-                  Select Prospective Brokers:
-                </h3>
-                <p className="text-xs font-mono text-slate-400">
-                  {selectedIds.length} / {NFT_COLLECTION.length} selected for simulation
-                </p>
-              </div>
+          {/* Subtle Grid Background Pattern */}
+          <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#00F58C_1px,transparent_1px)] [background-size:20px_20px]"></div>
 
-              <button
-                onClick={handleSelectAll}
-                className="px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 text-slate-300 hover:text-white text-xs font-mono font-bold transition"
-              >
-                {selectedIds.length === NFT_COLLECTION.length ? 'Deselect All' : 'Select All 11'}
-              </button>
+          {/* Glowing Padlock Icon */}
+          <div className="relative inline-flex items-center justify-center">
+            <div className="absolute -inset-4 bg-hood-green/20 rounded-full blur-xl animate-pulse"></div>
+            <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-black/60 border-2 border-hood-green/50 flex items-center justify-center text-hood-green shadow-xl shadow-hood-green/20">
+              <Lock size={48} className="animate-bounce" />
             </div>
-
-            {/* Selector Grid of 11 NFTs */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {NFT_COLLECTION.map((nft) => {
-                const isSelected = selectedIds.includes(nft.id);
-                return (
-                  <div
-                    key={nft.id}
-                    onClick={() => toggleBroker(nft.id)}
-                    className={`relative rounded-2xl p-2.5 border cursor-pointer transition-all duration-200 flex items-center gap-3 ${
-                      isSelected
-                        ? 'bg-hood-green/10 border-hood-green shadow-md shadow-hood-green/10'
-                        : 'bg-black/40 border-white/5 opacity-60 hover:opacity-100 hover:border-white/20'
-                    }`}
-                  >
-                    <div className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0">
-                      <img src={nft.image} alt={nft.name} className="w-full h-full object-cover" />
-                      {isSelected && (
-                        <div className="absolute inset-0 bg-hood-green/30 flex items-center justify-center">
-                          <Check size={16} className="text-black font-extrabold" />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="min-w-0 flex-1">
-                      <div className="text-xs font-bold text-white truncate">{nft.name}</div>
-                      <div className="text-[10px] font-mono text-hood-green">+{nft.stakingYield} $SPRM/d</div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
           </div>
 
-          {/* Right Col: Yield Calculations & Unlocked Perks */}
-          <div className="lg:col-span-5 space-y-6">
-            
-            {/* Real-time Earnings Card */}
-            <div className="rounded-3xl p-6 sm:p-8 glass-panel-glow border border-amber-500/30 shadow-2xl space-y-6 relative overflow-hidden">
-              
-              <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                <span className="text-xs font-mono text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <Clock size={14} className="text-amber-400" />
-                  <span>Projected Yield Simulator</span>
-                </span>
-                <span className="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 font-mono text-xs font-bold border border-amber-500/40">
-                  Phase 2 Launch
-                </span>
-              </div>
+          {/* Status Text & Protocol Banner */}
+          <div className="space-y-3 max-w-xl mx-auto">
+            <h3 className="text-2xl sm:text-3xl font-extrabold font-display text-white">
+              The Vault is Preparing for Genesis Lock
+            </h3>
+            <p className="text-sm text-slate-300 font-mono">
+              Holders of all 11 Sperm Broker archetypes will be eligible to stake for governance power, $SPRM dividends, and ecosystem royalties upon Phase 2 rollout.
+            </p>
+          </div>
 
-              {/* Big Daily Metric */}
-              <div className="space-y-1">
-                <div className="text-xs font-mono text-slate-400">Simulated Daily Yield</div>
-                <div className="text-4xl sm:text-5xl font-extrabold font-mono text-hood-green flex items-baseline gap-2">
-                  <span>+{dailyYield}</span>
-                  <span className="text-sm text-slate-400 font-sans">$SPRM / day</span>
-                </div>
-              </div>
-
-              {/* Monthly & USD Value */}
-              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/10 font-mono">
-                <div>
-                  <div className="text-[11px] text-slate-400">30-Day Potential</div>
-                  <div className="text-lg font-bold text-white">+{monthlyYield} $SPRM</div>
-                </div>
-                <div>
-                  <div className="text-[11px] text-slate-400">Est. USD Value ($0.42)</div>
-                  <div className="text-lg font-bold text-cyber-gold">${monthlyValueUsd}</div>
-                </div>
-              </div>
-
-              {/* Disabled Staking Button with Coming Soon indicator */}
-              <div className="pt-2">
-                <button
-                  disabled
-                  className="w-full py-4 px-6 rounded-2xl bg-amber-500/20 border-2 border-amber-500/40 text-amber-300 font-extrabold text-xs font-mono tracking-widest uppercase flex items-center justify-center gap-2 cursor-not-allowed shadow-lg shadow-amber-500/10"
+          {/* 3 Value Pillars */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left pt-4 border-t border-white/10">
+            {teaserFeatures.map((feat, idx) => {
+              const Icon = feat.icon;
+              return (
+                <div
+                  key={idx}
+                  className={`p-6 rounded-2xl bg-black/40 border ${feat.border} transition-all duration-300 space-y-3`}
                 >
-                  <Lock size={16} />
-                  <span>Staking Protocol Soon...</span>
-                </button>
-                <p className="text-[11px] font-mono text-slate-500 text-center mt-2">
-                  Contract deployment countdown in progress (Q2 2026)
-                </p>
-              </div>
+                  <div className={`w-12 h-12 rounded-xl ${feat.bg} border border-white/10 flex items-center justify-center ${feat.color}`}>
+                    <Icon size={24} />
+                  </div>
+                  <h4 className="text-base font-bold font-display text-white">
+                    {feat.title}
+                  </h4>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    {feat.desc}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
 
+          {/* Lock Action Bar */}
+          <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="px-8 py-4 rounded-2xl bg-black/60 border border-white/10 text-slate-400 text-xs font-mono font-bold flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+              <span>NETWORK STATUS: SMART CONTRACT DEPLOYMENT SCHEDULED (Q2 2026)</span>
             </div>
-
-            {/* Unlocked Perks List */}
-            <div className="rounded-3xl p-6 bg-[#0D111A]/90 border border-white/10 space-y-4">
-              <h4 className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-                <Sparkles size={14} className="text-cyber-gold" />
-                <span>Upcoming Holder Perks:</span>
-              </h4>
-
-              <div className="space-y-2.5 text-xs text-slate-300 font-medium">
-                <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-black/40 border border-white/5">
-                  <span className="w-2 h-2 rounded-full bg-hood-green"></span>
-                  <span>Exclusive Whale Alpha Signals Discord Lounge</span>
-                </div>
-                <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-black/40 border border-white/5">
-                  <span className="w-2 h-2 rounded-full bg-cyber-cyan"></span>
-                  <span>50% Secondary Market Royalty Redistribution</span>
-                </div>
-                <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-black/40 border border-white/5">
-                  <span className="w-2 h-2 rounded-full bg-cyber-gold"></span>
-                  <span>Guaranteed Whitelist for V2 Expansion Drop</span>
-                </div>
-                <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-black/40 border border-white/5">
-                  <span className="w-2 h-2 rounded-full bg-cyber-pink"></span>
-                  <span>Governance Voting Rights in Robinhood Hedge DAO</span>
-                </div>
-              </div>
-            </div>
-
           </div>
 
         </div>

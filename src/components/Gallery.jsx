@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Sparkles, Search, Filter, Layers, Eye, Zap } from 'lucide-react';
+import { Sparkles, Search, Filter, Layers, Eye, Lock } from 'lucide-react';
 import { NFT_COLLECTION, RARITY_TIERS } from '../data/nfts';
 import { sound } from '../utils/sound';
 
@@ -180,12 +180,12 @@ export default function Gallery({ onSelectNFT }) {
                       ))}
                     </div>
 
-                    {/* Staking Yield Info */}
+                    {/* Staking Status Info */}
                     <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-mono">
                       <span className="text-slate-400">Staking:</span>
-                      <span className="text-hood-green font-bold flex items-center gap-1">
-                        <Zap size={13} className="fill-hood-green" />
-                        +{nft.stakingYield} $SPRM/d
+                      <span className="text-amber-400 font-bold flex items-center gap-1">
+                        <Lock size={12} />
+                        Phase 2 Soon
                       </span>
                     </div>
                   </div>
