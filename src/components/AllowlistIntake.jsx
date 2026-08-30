@@ -91,6 +91,13 @@ export default function AllowlistIntake() {
       setTwitterUsername(cleanTwitter);
     }
 
+    const handleBody = cleanTwitter.slice(1);
+    // Strict Latin-only alphanumeric + underscore check (no Cyrillic, no special chars)
+    if (!/^[a-zA-Z0-9_]{1,30}$/.test(handleBody)) {
+      setErrorMsg('X (Twitter) handle must only contain Latin letters (a-z, A-Z), numbers, and underscores (_). Cyrillic is not allowed.');
+      return;
+    }
+
     // Validate invite code if entered
     if (inviteCode && inviteCode.trim()) {
       setValidatingCode(true);
@@ -292,14 +299,16 @@ export default function AllowlistIntake() {
             {/* X Username Field */}
             <div className="space-y-2">
               <label className="block font-pixel text-[10px] text-slate-300 uppercase tracking-wider">
-                X USERNAME
+                X USERNAME <span className="text-slate-500 font-mono text-[9px]">(Latin only)</span>
               </label>
               <input
                 type="text"
                 required
                 value={twitterUsername}
                 onChange={(e) => {
-                  setTwitterUsername(e.target.value);
+                  // Only allow Latin characters, digits, underscore and @
+                  const latinOnly = e.target.value.replace(/[^a-zA-Z0-9_@]/g, '');
+                  setTwitterUsername(latinOnly);
                   if (errorMsg) setErrorMsg('');
                 }}
                 placeholder="@username"
@@ -323,7 +332,9 @@ export default function AllowlistIntake() {
                 type="text"
                 value={inviteCode}
                 onChange={(e) => {
-                  setInviteCode(e.target.value.toUpperCase());
+                  // Only allow Latin characters, digits and dashes
+                  const latinCode = e.target.value.toUpperCase().replace(/[^A-Z0-9_-]/g, '');
+                  setInviteCode(latinCode);
                   setInviteCodeStatus(null);
                   if (errorMsg) setErrorMsg('');
                 }}
