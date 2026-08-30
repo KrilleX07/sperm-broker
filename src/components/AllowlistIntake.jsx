@@ -47,6 +47,24 @@ export default function AllowlistIntake() {
     }
   }, [twitterUsername]);
 
+  // Restore completed state from localStorage on page reload
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('sperm_broker_registered_user');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed?.wallet && parsed?.twitter && parsed?.myRefCode) {
+          setCompletedData(parsed);
+          setTwitterUsername(parsed.twitter);
+          setWalletAddress(parsed.wallet);
+          setCurrentStep(4);
+        }
+      }
+    } catch (e) {
+      console.warn('LocalStorage restore notice:', e);
+    }
+  }, []);
+
   // Auto-read ?ref=XYZ parameter from URL on load
   useEffect(() => {
     try {
@@ -226,6 +244,12 @@ export default function AllowlistIntake() {
         refLink: `${window.location.origin}/?ref=${myRefCode}`,
       };
 
+      try {
+        localStorage.setItem('sperm_broker_registered_user', JSON.stringify(savedData));
+      } catch (e) {
+        console.warn('LocalStorage save notice:', e);
+      }
+
       setCompletedData(savedData);
       setCurrentStep(4);
     } catch (err) {
@@ -233,6 +257,24 @@ export default function AllowlistIntake() {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleReset = () => {
+    sound.playClick();
+    try {
+      localStorage.removeItem('sperm_broker_registered_user');
+    } catch (e) {}
+    setCompletedData(null);
+    setTwitterUsername('');
+    setWalletAddress('');
+    setInviteCode('');
+    setInviteCodeStatus(null);
+    setMissions({
+      follow: { completed: false, countdown: 0 },
+      repost: { completed: false, countdown: 0 },
+      tag: { completed: false, countdown: 0 },
+    });
+    setCurrentStep(1);
   };
 
   const copyToClipboard = (text, type) => {
@@ -724,7 +766,7 @@ export default function AllowlistIntake() {
             </div>
 
             {/* Action CTAs */}
-            <div className="pt-2">
+            <div className="pt-2 space-y-3">
               <a
                 href={`https://twitter.com/intent/tweet?text=${tweetShareText}`}
                 target="_blank"
@@ -735,6 +777,16 @@ export default function AllowlistIntake() {
                 <Share2 size={15} />
                 <span>SHARE ON X (+10 PTS)</span>
               </a>
+
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="font-pixel text-[9px] text-slate-500 hover:text-slate-300 uppercase tracking-widest transition hover:underline"
+                >
+                  [ REGISTER ANOTHER WALLET ]
+                </button>
+              </div>
             </div>
 
           </div>
