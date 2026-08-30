@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Check, Copy, Share2, ExternalLink, ArrowRight, Loader2, Sparkles, AlertCircle } from 'lucide-react';
+import { Check, Copy, Share2, ExternalLink, ArrowRight, Loader2, Sparkles, AlertCircle, ShieldAlert, CheckCircle2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { registerWhitelistUser } from '../utils/supabase';
+import { registerWhitelistUser, validateInviteCode } from '../utils/supabase';
 import { sound } from '../utils/sound';
 
 export default function AllowlistIntake() {
   const [currentStep, setCurrentStep] = useState(1);
   const [twitterUsername, setTwitterUsername] = useState('');
   const [inviteCode, setInviteCode] = useState('');
-  
-  // Mission state tracking
+  const [validatingCode, setValidatingCode] = useState(false);
+  const [inviteCodeStatus, setInviteCodeStatus] = useState(null); // { valid: true/false, message }
+
+  // 3 Missions state tracking
   const [missions, setMissions] = useState({
     follow: { completed: false, countdown: 0 },
     repost: { completed: false, countdown: 0 },
@@ -30,20 +32,22 @@ export default function AllowlistIntake() {
       const refParam = params.get('ref');
       if (refParam) {
         setInviteCode(refParam.toUpperCase());
+        validateInviteCode(refParam.toUpperCase()).then((res) => {
+          setInviteCodeStatus(res);
+        });
       }
     } catch (e) {
       console.warn('URL param parse notice:', e);
     }
   }, []);
 
-  // Handle mission click with 5-second verification timer
+  // Handle mission click with 5-second countdown timer
   const handleMissionClick = (missionKey, url) => {
     sound.playClick();
     window.open(url, '_blank', 'noopener,noreferrer');
 
     if (missions[missionKey].completed) return;
 
-    // Start 5-second countdown timer
     let count = 5;
     setMissions((prev) => ({
       ...prev,
@@ -68,8 +72,11 @@ export default function AllowlistIntake() {
     }, 1000);
   };
 
-  // Step 1: Identity validation
-  const handleStep1Submit = (e) => {
+  const completedMissionsCount = Object.values(missions).filter((m) => m.completed).length;
+  const allMissionsDone = completedMissionsCount === 3;
+
+  // Step 1: Validate identity and referral code
+  const handleStep1Submit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
     sound.playClick();
@@ -84,12 +91,31 @@ export default function AllowlistIntake() {
       setTwitterUsername(cleanTwitter);
     }
 
+    // Validate invite code if entered
+    if (inviteCode && inviteCode.trim()) {
+      setValidatingCode(true);
+      const codeCheck = await validateInviteCode(inviteCode.trim());
+      setValidatingCode(false);
+      setInviteCodeStatus(codeCheck);
+
+      if (!codeCheck.valid) {
+        setErrorMsg(codeCheck.message || 'Invalid Invite Code. Leave blank or enter a valid code.');
+        return;
+      }
+    }
+
     setCurrentStep(2);
   };
 
-  // Step 2: Missions next step
+  // Step 2: Validate missions before moving to wallet
   const handleStep2Submit = () => {
+    if (!allMissionsDone) {
+      sound.playClick();
+      setErrorMsg('Please complete all 3 missions before proceeding to wallet submission.');
+      return;
+    }
     sound.playClick();
+    setErrorMsg('');
     setCurrentStep(3);
   };
 
@@ -99,6 +125,12 @@ export default function AllowlistIntake() {
     setErrorMsg('');
     sound.playClick();
 
+    if (!allMissionsDone) {
+      setErrorMsg('You must complete all 3 missions to unlock wallet clearance.');
+      setCurrentStep(2);
+      return;
+    }
+
     const cleanWallet = walletAddress.trim();
     if (!cleanWallet) {
       setErrorMsg('Please enter your wallet address.');
@@ -106,14 +138,14 @@ export default function AllowlistIntake() {
     }
 
     if (!/^0x[a-fA-F0-9]{40}$/.test(cleanWallet)) {
-      setErrorMsg('Invalid EVM wallet address. Must start with 0x and be 42 characters.');
+      setErrorMsg('Invalid EVM wallet address format. Must start with 0x and contain 42 characters.');
       return;
     }
 
     setSubmitting(true);
 
     // Generate unique referral code for this user
-    const usernameSlug = twitterUsername.replace('@', '').toUpperCase().slice(0, 8);
+    const usernameSlug = twitterUsername.replace('@', '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8) || 'BROKER';
     const randomSuffix = Math.random().toString(36).substring(2, 6).toUpperCase();
     const myRefCode = `${usernameSlug}-${randomSuffix}`;
 
@@ -164,7 +196,7 @@ export default function AllowlistIntake() {
 
   const tweetShareText = completedData
     ? encodeURIComponent(
-        `Just submitted my desk intake for the @SpermBrokers Genesis Allowlist on Robinhood Chain! 🧬\n\nUse my invite code: ${completedData.myRefCode}\n\nApply here: ${completedData.refLink}`
+        `Just cleared all intake missions for the @SpermBrokers Genesis Allowlist on Robinhood Chain! 🧬\n\nUse my invite code to get on the desk: ${completedData.myRefCode}\n\nRegister: ${completedData.refLink}`
       )
     : '';
 
@@ -181,11 +213,12 @@ export default function AllowlistIntake() {
         </h1>
       </div>
 
-      {/* Step Tabs Pills Container */}
+      {/* Step Tabs Pills Container with strict progression */}
       <div className="grid grid-cols-3 gap-2 sm:gap-3 p-1.5 rounded-xl bg-[#05070B] border border-[#1E293B] font-pixel text-[9px] sm:text-xs text-center select-none">
         
         {/* Tab 1 */}
         <button
+          type="button"
           onClick={() => {
             if (completedData) return;
             sound.playClick();
@@ -195,8 +228,8 @@ export default function AllowlistIntake() {
             currentStep === 1
               ? 'border-[#00F58C] text-[#00F58C] bg-[#00F58C]/10 shadow-sm shadow-[#00F58C]/20'
               : currentStep > 1
-              ? 'border-[#00F58C]/40 text-[#00F58C] bg-transparent'
-              : 'border-transparent text-slate-500 hover:text-slate-300'
+              ? 'border-[#00F58C]/40 text-[#00F58C] bg-transparent cursor-pointer'
+              : 'border-transparent text-slate-500'
           }`}
         >
           01 IDENTITY
@@ -204,6 +237,8 @@ export default function AllowlistIntake() {
 
         {/* Tab 2 */}
         <button
+          type="button"
+          disabled={!twitterUsername}
           onClick={() => {
             if (completedData || !twitterUsername) return;
             sound.playClick();
@@ -212,9 +247,11 @@ export default function AllowlistIntake() {
           className={`py-3 px-2 rounded-lg border transition-all ${
             currentStep === 2
               ? 'border-[#00F58C] text-[#00F58C] bg-[#00F58C]/10 shadow-sm shadow-[#00F58C]/20'
+              : allMissionsDone
+              ? 'border-[#00F58C]/40 text-[#00F58C] bg-transparent cursor-pointer'
               : currentStep > 2
-              ? 'border-[#00F58C]/40 text-[#00F58C] bg-transparent'
-              : 'border-transparent text-slate-500'
+              ? 'border-[#00F58C]/40 text-[#00F58C]'
+              : 'border-transparent text-slate-600 cursor-not-allowed'
           }`}
         >
           02 MISSIONS
@@ -222,17 +259,19 @@ export default function AllowlistIntake() {
 
         {/* Tab 3 */}
         <button
+          type="button"
+          disabled={!allMissionsDone}
           onClick={() => {
-            if (completedData || !twitterUsername) return;
+            if (completedData || !allMissionsDone) return;
             sound.playClick();
             setCurrentStep(3);
           }}
           className={`py-3 px-2 rounded-lg border transition-all ${
             currentStep === 3
               ? 'border-[#00F58C] text-[#00F58C] bg-[#00F58C]/10 shadow-sm shadow-[#00F58C]/20'
-              : currentStep > 3
-              ? 'border-[#00F58C]/40 text-[#00F58C] bg-transparent'
-              : 'border-transparent text-slate-500'
+              : allMissionsDone && currentStep > 1
+              ? 'border-transparent text-slate-400 hover:text-white cursor-pointer'
+              : 'border-transparent text-slate-600 cursor-not-allowed opacity-50'
           }`}
         >
           03 WALLET
@@ -259,29 +298,43 @@ export default function AllowlistIntake() {
                 type="text"
                 required
                 value={twitterUsername}
-                onChange={(e) => setTwitterUsername(e.target.value)}
+                onChange={(e) => {
+                  setTwitterUsername(e.target.value);
+                  if (errorMsg) setErrorMsg('');
+                }}
                 placeholder="@username"
                 className="w-full px-4 py-4 rounded-xl bg-[#04060A] border border-[#1E293B] text-white font-mono text-sm focus:outline-none focus:border-[#00F58C] transition placeholder:text-slate-600"
               />
             </div>
 
-            {/* Invite Code Field */}
+            {/* Invite Code Field with Existence Check */}
             <div className="space-y-2">
-              <label className="block font-pixel text-[10px] text-slate-300 uppercase tracking-wider">
-                INVITE CODE
-              </label>
+              <div className="flex justify-between items-center">
+                <label className="block font-pixel text-[10px] text-slate-300 uppercase tracking-wider">
+                  INVITE CODE
+                </label>
+                {inviteCodeStatus?.valid && inviteCode.trim() && (
+                  <span className="font-pixel text-[9px] text-[#00F58C] flex items-center gap-1">
+                    <Check size={11} /> VALID CODE
+                  </span>
+                )}
+              </div>
               <input
                 type="text"
                 value={inviteCode}
-                onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
-                placeholder="optional"
-                className="w-full px-4 py-4 rounded-xl bg-[#04060A] border border-[#1E293B] text-[#00E5FF] font-mono text-sm focus:outline-none focus:border-[#00F58C] transition placeholder:text-slate-600 uppercase"
+                onChange={(e) => {
+                  setInviteCode(e.target.value.toUpperCase());
+                  setInviteCodeStatus(null);
+                  if (errorMsg) setErrorMsg('');
+                }}
+                placeholder="optional (e.g. GENESIS, SPERM)"
+                className="w-full px-4 py-4 rounded-xl bg-[#04060A] border border-[#1E293B] text-[#00E5FF] font-mono text-sm focus:outline-none focus:border-[#00F58C] transition placeholder:text-slate-600 uppercase tracking-wider"
               />
             </div>
 
             {errorMsg && (
-              <div className="font-mono text-xs text-rose-400 flex items-center gap-2">
-                <AlertCircle size={14} />
+              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 font-mono text-xs flex items-center gap-2 animate-in fade-in">
+                <AlertCircle size={15} className="flex-shrink-0" />
                 <span>{errorMsg}</span>
               </div>
             )}
@@ -289,9 +342,17 @@ export default function AllowlistIntake() {
             {/* Action Button */}
             <button
               type="submit"
-              className="w-full py-4 px-6 rounded-xl bg-[#00F58C] hover:bg-[#25FF9C] text-black font-pixel text-xs uppercase tracking-widest shadow-lg shadow-[#00F58C]/20 hover:shadow-[#00F58C]/40 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200"
+              disabled={validatingCode}
+              className="w-full py-4 px-6 rounded-xl bg-[#00F58C] hover:bg-[#25FF9C] text-black font-pixel text-xs uppercase tracking-widest shadow-lg shadow-[#00F58C]/20 hover:shadow-[#00F58C]/40 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 flex items-center justify-center gap-2"
             >
-              [ ENTER THE FLOOR ]
+              {validatingCode ? (
+                <>
+                  <Loader2 size={15} className="animate-spin" />
+                  <span>[ VERIFYING CODE... ]</span>
+                </>
+              ) : (
+                <span>[ ENTER THE FLOOR ]</span>
+              )}
             </button>
           </form>
         )}
@@ -303,21 +364,21 @@ export default function AllowlistIntake() {
               <span className="font-pixel text-[10px] text-slate-400 tracking-wider uppercase">
                 DESK CLEARANCE PROTOCOL
               </span>
-              <span className="font-mono text-xs text-[#00F58C] font-bold">
-                {Object.values(missions).filter((m) => m.completed).length} / 3 COMPLETED
+              <span className={`font-pixel text-[10px] font-bold ${allMissionsDone ? 'text-[#00F58C]' : 'text-amber-400'}`}>
+                {completedMissionsCount} / 3 COMPLETED
               </span>
             </div>
 
             {/* Mission 1: Follow on X */}
             <div
               onClick={() => handleMissionClick('follow', 'https://x.com/SpermBrokers')}
-              className={`p-4 rounded-xl border cursor-pointer transition-all flex items-center justify-between gap-3 ${
+              className={`p-4 rounded-xl border cursor-pointer transition-all flex items-center justify-between gap-4 ${
                 missions.follow.completed
                   ? 'bg-[#00F58C]/10 border-[#00F58C]'
-                  : 'bg-[#04060A] border-[#1E293B] hover:border-slate-500'
+                  : 'bg-[#04060A] border-[#1E293B] hover:border-slate-400'
               }`}
             >
-              <div className="space-y-1">
+              <div className="space-y-1 flex-1 min-w-0">
                 <div className="font-pixel text-[11px] text-white">
                   1. Follow @SpermBrokers on X
                 </div>
@@ -326,17 +387,17 @@ export default function AllowlistIntake() {
                 </div>
               </div>
 
-              <div>
+              <div className="flex-shrink-0">
                 {missions.follow.completed ? (
-                  <span className="px-3 py-1.5 rounded-lg bg-[#00F58C] text-black font-pixel text-[9px] flex items-center gap-1">
+                  <span className="min-w-[130px] px-3.5 py-2 rounded-lg bg-[#00F58C] text-black font-pixel text-[9px] flex items-center justify-center gap-1 shadow-sm whitespace-nowrap">
                     <Check size={12} className="stroke-[3]" /> VERIFIED
                   </span>
                 ) : missions.follow.countdown > 0 ? (
-                  <span className="px-3 py-1.5 rounded-lg bg-amber-400/20 text-amber-300 font-pixel text-[9px] border border-amber-400/40 animate-pulse">
+                  <span className="min-w-[130px] px-3.5 py-2 rounded-lg bg-amber-400/20 text-amber-300 font-pixel text-[9px] border border-amber-400/50 flex items-center justify-center gap-1 whitespace-nowrap animate-pulse">
                     VERIFYING {missions.follow.countdown}S...
                   </span>
                 ) : (
-                  <span className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-pixel text-[9px] border border-white/15">
+                  <span className="min-w-[130px] px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-pixel text-[9px] border border-white/15 flex items-center justify-center whitespace-nowrap">
                     [ START ]
                   </span>
                 )}
@@ -346,13 +407,13 @@ export default function AllowlistIntake() {
             {/* Mission 2: Like & Repost Genesis Tweet */}
             <div
               onClick={() => handleMissionClick('repost', 'https://x.com/SpermBrokers')}
-              className={`p-4 rounded-xl border cursor-pointer transition-all flex items-center justify-between gap-3 ${
+              className={`p-4 rounded-xl border cursor-pointer transition-all flex items-center justify-between gap-4 ${
                 missions.repost.completed
                   ? 'bg-[#00F58C]/10 border-[#00F58C]'
-                  : 'bg-[#04060A] border-[#1E293B] hover:border-slate-500'
+                  : 'bg-[#04060A] border-[#1E293B] hover:border-slate-400'
               }`}
             >
-              <div className="space-y-1">
+              <div className="space-y-1 flex-1 min-w-0">
                 <div className="font-pixel text-[11px] text-white">
                   2. Like & Repost Announcement
                 </div>
@@ -361,17 +422,17 @@ export default function AllowlistIntake() {
                 </div>
               </div>
 
-              <div>
+              <div className="flex-shrink-0">
                 {missions.repost.completed ? (
-                  <span className="px-3 py-1.5 rounded-lg bg-[#00F58C] text-black font-pixel text-[9px] flex items-center gap-1">
+                  <span className="min-w-[130px] px-3.5 py-2 rounded-lg bg-[#00F58C] text-black font-pixel text-[9px] flex items-center justify-center gap-1 shadow-sm whitespace-nowrap">
                     <Check size={12} className="stroke-[3]" /> VERIFIED
                   </span>
                 ) : missions.repost.countdown > 0 ? (
-                  <span className="px-3 py-1.5 rounded-lg bg-amber-400/20 text-amber-300 font-pixel text-[9px] border border-amber-400/40 animate-pulse">
+                  <span className="min-w-[130px] px-3.5 py-2 rounded-lg bg-amber-400/20 text-amber-300 font-pixel text-[9px] border border-amber-400/50 flex items-center justify-center gap-1 whitespace-nowrap animate-pulse">
                     VERIFYING {missions.repost.countdown}S...
                   </span>
                 ) : (
-                  <span className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-pixel text-[9px] border border-white/15">
+                  <span className="min-w-[130px] px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-pixel text-[9px] border border-white/15 flex items-center justify-center whitespace-nowrap">
                     [ START ]
                   </span>
                 )}
@@ -381,13 +442,13 @@ export default function AllowlistIntake() {
             {/* Mission 3: Tag 3 Friends / Quote Tweet */}
             <div
               onClick={() => handleMissionClick('tag', 'https://x.com/SpermBrokers')}
-              className={`p-4 rounded-xl border cursor-pointer transition-all flex items-center justify-between gap-3 ${
+              className={`p-4 rounded-xl border cursor-pointer transition-all flex items-center justify-between gap-4 ${
                 missions.tag.completed
                   ? 'bg-[#00F58C]/10 border-[#00F58C]'
-                  : 'bg-[#04060A] border-[#1E293B] hover:border-slate-500'
+                  : 'bg-[#04060A] border-[#1E293B] hover:border-slate-400'
               }`}
             >
-              <div className="space-y-1">
+              <div className="space-y-1 flex-1 min-w-0">
                 <div className="font-pixel text-[11px] text-white">
                   3. Tag 3 Degen Friends on X
                 </div>
@@ -396,29 +457,49 @@ export default function AllowlistIntake() {
                 </div>
               </div>
 
-              <div>
+              <div className="flex-shrink-0">
                 {missions.tag.completed ? (
-                  <span className="px-3 py-1.5 rounded-lg bg-[#00F58C] text-black font-pixel text-[9px] flex items-center gap-1">
+                  <span className="min-w-[130px] px-3.5 py-2 rounded-lg bg-[#00F58C] text-black font-pixel text-[9px] flex items-center justify-center gap-1 shadow-sm whitespace-nowrap">
                     <Check size={12} className="stroke-[3]" /> VERIFIED
                   </span>
                 ) : missions.tag.countdown > 0 ? (
-                  <span className="px-3 py-1.5 rounded-lg bg-amber-400/20 text-amber-300 font-pixel text-[9px] border border-amber-400/40 animate-pulse">
+                  <span className="min-w-[130px] px-3.5 py-2 rounded-lg bg-amber-400/20 text-amber-300 font-pixel text-[9px] border border-amber-400/50 flex items-center justify-center gap-1 whitespace-nowrap animate-pulse">
                     VERIFYING {missions.tag.countdown}S...
                   </span>
                 ) : (
-                  <span className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-pixel text-[9px] border border-white/15">
+                  <span className="min-w-[130px] px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-pixel text-[9px] border border-white/15 flex items-center justify-center whitespace-nowrap">
                     [ START ]
                   </span>
                 )}
               </div>
             </div>
 
-            {/* Proceed to Step 3 Button */}
+            {errorMsg && (
+              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 font-mono text-xs flex items-center gap-2">
+                <AlertCircle size={15} className="flex-shrink-0" />
+                <span>{errorMsg}</span>
+              </div>
+            )}
+
+            {/* Proceed to Step 3 Button - STRICTLY LOCKED UNTIL 3/3 MISSIONS */}
             <button
+              type="button"
               onClick={handleStep2Submit}
-              className="w-full py-4 px-6 rounded-xl bg-[#00F58C] hover:bg-[#25FF9C] text-black font-pixel text-xs uppercase tracking-widest shadow-lg shadow-[#00F58C]/20 hover:scale-[1.01] active:scale-[0.99] transition-all"
+              disabled={!allMissionsDone}
+              className={`w-full py-4 px-6 rounded-xl font-pixel text-xs uppercase tracking-widest transition-all duration-200 flex items-center justify-center gap-2 ${
+                allMissionsDone
+                  ? 'bg-[#00F58C] hover:bg-[#25FF9C] text-black shadow-lg shadow-[#00F58C]/25 hover:scale-[1.01] cursor-pointer'
+                  : 'bg-white/5 border border-white/10 text-slate-500 cursor-not-allowed opacity-60'
+              }`}
             >
-              [ PROCEED TO WALLET ]
+              {allMissionsDone ? (
+                <>
+                  <span>[ PROCEED TO WALLET ]</span>
+                  <ArrowRight size={14} />
+                </>
+              ) : (
+                <span>[ COMPLETE ALL 3 MISSIONS ({completedMissionsCount}/3) ]</span>
+              )}
             </button>
           </div>
         )}
@@ -439,7 +520,10 @@ export default function AllowlistIntake() {
                 type="text"
                 required
                 value={walletAddress}
-                onChange={(e) => setWalletAddress(e.target.value)}
+                onChange={(e) => {
+                  setWalletAddress(e.target.value);
+                  if (errorMsg) setErrorMsg('');
+                }}
                 placeholder="0x71C...3921"
                 className="w-full px-4 py-4 rounded-xl bg-[#04060A] border border-[#1E293B] text-white font-mono text-sm focus:outline-none focus:border-[#00F58C] transition placeholder:text-slate-600"
               />
@@ -449,8 +533,8 @@ export default function AllowlistIntake() {
             </div>
 
             {errorMsg && (
-              <div className="font-mono text-xs text-rose-400 flex items-center gap-2">
-                <AlertCircle size={14} />
+              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 font-mono text-xs flex items-center gap-2">
+                <AlertCircle size={15} className="flex-shrink-0" />
                 <span>{errorMsg}</span>
               </div>
             )}
@@ -515,6 +599,7 @@ export default function AllowlistIntake() {
                   YOUR INVITE CODE:
                 </span>
                 <button
+                  type="button"
                   onClick={() => copyToClipboard(completedData.myRefCode, 'code')}
                   className="font-pixel text-[9px] text-[#00E5FF] hover:underline flex items-center gap-1"
                 >
@@ -537,6 +622,7 @@ export default function AllowlistIntake() {
                     className="w-full px-3 py-2.5 rounded-lg bg-black border border-white/10 text-slate-300 font-mono text-xs truncate focus:outline-none"
                   />
                   <button
+                    type="button"
                     onClick={() => copyToClipboard(completedData.refLink, 'link')}
                     className="px-4 py-2.5 rounded-lg bg-[#00F58C] hover:bg-[#25FF9C] text-black font-pixel text-[9px] uppercase whitespace-nowrap flex items-center gap-1 transition"
                   >
