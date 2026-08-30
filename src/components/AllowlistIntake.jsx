@@ -4,6 +4,7 @@ import confetti from 'canvas-confetti';
 import { registerWhitelistUser, validateInviteCode, checkTwitterExists, checkWalletExists } from '../utils/supabase';
 import { fetchTwitterAvatar } from '../utils/avatar';
 import { sound } from '../utils/sound';
+import AllowlistPass from './AllowlistPass';
 
 export default function AllowlistIntake() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -245,6 +246,8 @@ export default function AllowlistIntake() {
         twitter: twitterUsername,
         wallet: cleanWallet,
         myRefCode,
+        avatarUrl: avatarUrl || `https://unavatar.io/x/${twitterUsername.replace('@', '')}`,
+        spotNumber: Math.floor(1000 + Math.random() * 8999),
         inviteUsed: inviteCode || 'NONE',
         refLink: `${window.location.origin}/?ref=${myRefCode}`,
       };
@@ -690,111 +693,9 @@ export default function AllowlistIntake() {
           </form>
         )}
 
-        {/* ===================== STEP 4: ACCESS GRANTED & REFERRAL BOX ===================== */}
+        {/* ===================== STEP 4: ACCESS GRANTED & DIGITAL PASS ===================== */}
         {currentStep === 4 && completedData && (
-          <div className="space-y-6 text-center py-4 animate-in zoom-in-95 duration-300">
-            
-            {/* Top Confirmed Stamp */}
-            <div className="inline-block p-3 rounded-2xl bg-[#00F58C]/15 border-2 border-[#00F58C] text-[#00F58C]">
-              <Check size={32} className="stroke-[3]" />
-            </div>
-
-            <div className="space-y-2">
-              <h2 className="font-pixel text-xl sm:text-2xl text-[#00F58C] uppercase tracking-wide">
-                DESK ACCESS GRANTED!
-              </h2>
-              <p className="font-mono text-xs text-slate-300">
-                Welcome to the floor, <span className="text-white font-bold">{completedData.twitter}</span>.
-              </p>
-            </div>
-
-            {/* User Credentials Card */}
-            <div className="p-4 rounded-xl bg-[#04060A] border border-[#1E293B] text-left space-y-2 font-mono text-xs">
-              <div className="flex justify-between text-slate-400">
-                <span>Broker Identity:</span>
-                <span className="text-[#00E5FF] font-bold">{completedData.twitter}</span>
-              </div>
-              <div className="flex justify-between text-slate-400">
-                <span>Assigned Wallet:</span>
-                <span className="text-white font-bold">{completedData.wallet.slice(0, 6)}...{completedData.wallet.slice(-4)}</span>
-              </div>
-              <div className="flex justify-between text-slate-400">
-                <span>Desk Status:</span>
-                <span className="text-[#00F58C] font-bold">[ GTD ] REGISTERED</span>
-              </div>
-            </div>
-
-            {/* YOUR REFERRAL LINK BOX */}
-            <div className="p-5 rounded-2xl bg-gradient-to-b from-[#0e1626] to-[#04060A] border border-[#00F58C]/40 text-left space-y-4 shadow-lg shadow-[#00F58C]/10">
-              
-              <div className="flex justify-between items-center">
-                <span className="font-pixel text-[10px] text-[#00F58C] uppercase">
-                  YOUR INVITE CODE:
-                </span>
-                <button
-                  type="button"
-                  onClick={() => copyToClipboard(completedData.myRefCode, 'code')}
-                  className="font-pixel text-[9px] text-[#00E5FF] hover:underline flex items-center gap-1"
-                >
-                  {copiedCode ? 'COPIED!' : 'COPY CODE'}
-                </button>
-              </div>
-
-              <div className="p-3 rounded-xl bg-black border border-white/10 font-mono text-sm text-[#00F58C] font-bold text-center tracking-widest">
-                {completedData.myRefCode}
-              </div>
-
-              <div className="space-y-1.5">
-                <span className="font-pixel text-[9px] text-slate-400 uppercase">
-                  YOUR REFERRAL LINK:
-                </span>
-                <div className="flex gap-2">
-                  <input
-                    readOnly
-                    value={completedData.refLink}
-                    className="w-full px-3 py-2.5 rounded-lg bg-black border border-white/10 text-slate-300 font-mono text-xs truncate focus:outline-none"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => copyToClipboard(completedData.refLink, 'link')}
-                    className="px-4 py-2.5 rounded-lg bg-[#00F58C] hover:bg-[#25FF9C] text-black font-pixel text-[9px] uppercase whitespace-nowrap flex items-center gap-1 transition"
-                  >
-                    <Copy size={12} />
-                    <span>{copiedLink ? 'COPIED!' : 'COPY'}</span>
-                  </button>
-                </div>
-              </div>
-
-              <p className="font-mono text-[11px] text-slate-400 leading-relaxed">
-                ⚡ Share your invite code with fellow traders to secure guaranteed allocation and early mint access.
-              </p>
-            </div>
-
-            {/* Action CTAs */}
-            <div className="pt-2 space-y-3">
-              <a
-                href={`https://twitter.com/intent/tweet?text=${tweetShareText}`}
-                target="_blank"
-                rel="noreferrer"
-                onClick={() => sound.playCash()}
-                className="w-full py-4 px-4 rounded-xl bg-[#00F58C] hover:bg-[#25FF9C] text-black font-pixel text-[11px] uppercase flex items-center justify-center gap-2 shadow-lg shadow-[#00F58C]/20 transition hover:scale-[1.01]"
-              >
-                <Share2 size={15} />
-                <span>SHARE ON X (+10 PTS)</span>
-              </a>
-
-              <div className="pt-2">
-                <button
-                  type="button"
-                  onClick={handleReset}
-                  className="font-pixel text-[9px] text-slate-500 hover:text-slate-300 uppercase tracking-widest transition hover:underline"
-                >
-                  [ REGISTER ANOTHER WALLET ]
-                </button>
-              </div>
-            </div>
-
-          </div>
+          <AllowlistPass data={completedData} onReset={handleReset} />
         )}
 
       </div>
