@@ -22,6 +22,52 @@ export const MASTER_INVITE_CODES = [
 ];
 
 /**
+ * Check if a Twitter handle is already registered in DB
+ */
+export async function checkTwitterExists(twitter) {
+  if (!twitter || !twitter.trim()) return false;
+  const clean = twitter.startsWith('@') ? twitter.trim() : `@${twitter.trim()}`;
+
+  try {
+    const { data, error } = await supabase
+      .from('whitelist')
+      .select('id, twitter_handle')
+      .ilike('twitter_handle', clean)
+      .limit(1);
+
+    if (!error && data && data.length > 0) {
+      return true;
+    }
+  } catch (e) {
+    console.warn('Twitter existence check notice:', e);
+  }
+  return false;
+}
+
+/**
+ * Check if a Wallet address is already registered in DB
+ */
+export async function checkWalletExists(wallet) {
+  if (!wallet || !wallet.trim()) return false;
+  const clean = wallet.toLowerCase().trim();
+
+  try {
+    const { data, error } = await supabase
+      .from('whitelist')
+      .select('id, wallet_address')
+      .ilike('wallet_address', clean)
+      .limit(1);
+
+    if (!error && data && data.length > 0) {
+      return true;
+    }
+  } catch (e) {
+    console.warn('Wallet existence check notice:', e);
+  }
+  return false;
+}
+
+/**
  * Validate if an invite code exists (master codes or created by existing users)
  */
 export async function validateInviteCode(code) {
@@ -53,12 +99,32 @@ export async function validateInviteCode(code) {
 }
 
 /**
- * Register user in Supabase whitelist table with graceful fallback
+ * Register user in Supabase whitelist table with strict duplication protection
  */
 export async function registerWhitelistUser({ wallet, twitter, inviteCode, myRefCode }) {
   const cleanWallet = wallet.toLowerCase().trim();
   const cleanTwitter = twitter.startsWith('@') ? twitter.trim() : `@${twitter.trim()}`;
   const cleanInvite = inviteCode ? inviteCode.trim().toUpperCase() : null;
+
+  // Pre-check Twitter duplicate
+  const twitterTaken = await checkTwitterExists(cleanTwitter);
+  if (twitterTaken) {
+    return { 
+      success: false, 
+      error: 'duplicate_twitter', 
+      message: `The X account ${cleanTwitter} is already registered on the Allowlist!` 
+    };
+  }
+
+  // Pre-check Wallet duplicate
+  const walletTaken = await checkWalletExists(cleanWallet);
+  if (walletTaken) {
+    return { 
+      success: false, 
+      error: 'duplicate_wallet', 
+      message: `The wallet address ${cleanWallet.slice(0, 6)}...${cleanWallet.slice(-4)} is already registered on the Allowlist!` 
+    };
+  }
 
   try {
     const { data, error } = await supabase
@@ -73,15 +139,20 @@ export async function registerWhitelistUser({ wallet, twitter, inviteCode, myRef
       .select();
 
     if (error) {
-      // Check for duplicate wallet
       if (error.code === '23505' || error.message?.includes('unique') || error.message?.includes('duplicate')) {
-        return { success: true, alreadyExists: true, refCode: myRefCode };
+        return { 
+          success: false, 
+          error: 'duplicate', 
+          message: 'This wallet or X account has already been registered on the Allowlist.' 
+        };
       }
       console.warn('Supabase insert notice:', error);
+      return { success: false, message: error.message };
     }
+
     return { success: true, alreadyExists: false, refCode: myRefCode, data };
   } catch (err) {
     console.error('Supabase registration error:', err);
-    return { success: true, fallback: true, refCode: myRefCode };
+    return { success: false, message: err.message || 'Failed to submit.' };
   }
 }

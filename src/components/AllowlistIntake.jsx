@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Check, Copy, Share2, ExternalLink, ArrowRight, Loader2, Sparkles, AlertCircle, ShieldAlert, CheckCircle2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { registerWhitelistUser, validateInviteCode } from '../utils/supabase';
+import { registerWhitelistUser, validateInviteCode, checkTwitterExists, checkWalletExists } from '../utils/supabase';
 import { sound } from '../utils/sound';
 
 export default function AllowlistIntake() {
@@ -75,7 +75,7 @@ export default function AllowlistIntake() {
   const completedMissionsCount = Object.values(missions).filter((m) => m.completed).length;
   const allMissionsDone = completedMissionsCount === 3;
 
-  // Step 1: Validate identity and referral code
+  // Step 1: Validate identity, check Twitter duplicate and referral code
   const handleStep1Submit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
@@ -98,19 +98,29 @@ export default function AllowlistIntake() {
       return;
     }
 
+    setValidatingCode(true);
+
+    // Check if X handle is already registered in Supabase
+    const isTwitterTaken = await checkTwitterExists(cleanTwitter);
+    if (isTwitterTaken) {
+      setValidatingCode(false);
+      setErrorMsg(`The X account ${cleanTwitter} is already registered on the Allowlist!`);
+      return;
+    }
+
     // Validate invite code if entered
     if (inviteCode && inviteCode.trim()) {
-      setValidatingCode(true);
       const codeCheck = await validateInviteCode(inviteCode.trim());
-      setValidatingCode(false);
       setInviteCodeStatus(codeCheck);
 
       if (!codeCheck.valid) {
+        setValidatingCode(false);
         setErrorMsg(codeCheck.message || 'Invalid Invite Code. Leave blank or enter a valid code.');
         return;
       }
     }
 
+    setValidatingCode(false);
     setCurrentStep(2);
   };
 
@@ -126,7 +136,7 @@ export default function AllowlistIntake() {
     setCurrentStep(3);
   };
 
-  // Step 3: Wallet submission to Supabase
+  // Step 3: Wallet submission to Supabase with duplication check
   const handleStep3Submit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
@@ -151,18 +161,32 @@ export default function AllowlistIntake() {
 
     setSubmitting(true);
 
+    // Check if wallet is already registered in Supabase
+    const isWalletTaken = await checkWalletExists(cleanWallet);
+    if (isWalletTaken) {
+      setSubmitting(false);
+      setErrorMsg(`The wallet ${cleanWallet.slice(0, 6)}...${cleanWallet.slice(-4)} is already registered on the Allowlist!`);
+      return;
+    }
+
     // Generate unique referral code for this user
     const usernameSlug = twitterUsername.replace('@', '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8) || 'BROKER';
     const randomSuffix = Math.random().toString(36).substring(2, 6).toUpperCase();
     const myRefCode = `${usernameSlug}-${randomSuffix}`;
 
     try {
-      await registerWhitelistUser({
+      const res = await registerWhitelistUser({
         wallet: cleanWallet,
         twitter: twitterUsername,
         inviteCode: inviteCode || null,
         myRefCode,
       });
+
+      if (!res.success) {
+        setSubmitting(false);
+        setErrorMsg(res.message || 'Registration failed.');
+        return;
+      }
 
       sound.playMythicReveal();
       confetti({
