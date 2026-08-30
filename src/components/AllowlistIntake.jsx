@@ -380,9 +380,9 @@ export default function AllowlistIntake() {
               </span>
             </div>
 
-            {/* Mission 1: Follow on X */}
+            {/* Mission 1: Follow on X (Direct Follow Intent) */}
             <div
-              onClick={() => handleMissionClick('follow', 'https://x.com/SpermBrokers')}
+              onClick={() => handleMissionClick('follow', 'https://twitter.com/intent/follow?screen_name=SpermBrokers')}
               className={`p-4 rounded-xl border cursor-pointer transition-all flex items-center justify-between gap-4 ${
                 missions.follow.completed
                   ? 'bg-[#00F58C]/10 border-[#00F58C]'
@@ -452,7 +452,7 @@ export default function AllowlistIntake() {
 
             {/* Mission 3: Tag 3 Friends / Quote Tweet */}
             <div
-              onClick={() => handleMissionClick('tag', 'https://x.com/SpermBrokers')}
+              onClick={() => handleMissionClick('tag', `https://twitter.com/intent/tweet?text=${encodeURIComponent('Securing my desk on the @SpermBrokers Genesis Allowlist on Robinhood Chain! 🧬\n\nTagging 3 brokers: @ @ @\n\nApply: https://sperm-broker.vercel.app')}`)}
               className={`p-4 rounded-xl border cursor-pointer transition-all flex items-center justify-between gap-4 ${
                 missions.tag.completed
                   ? 'bg-[#00F58C]/10 border-[#00F58C]'
