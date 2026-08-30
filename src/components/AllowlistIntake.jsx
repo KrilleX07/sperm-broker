@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Check, Copy, Share2, ExternalLink, ArrowRight, Loader2, Sparkles, AlertCircle, ShieldAlert, CheckCircle2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { registerWhitelistUser, validateInviteCode, checkTwitterExists, checkWalletExists } from '../utils/supabase';
+import { fetchTwitterAvatar } from '../utils/avatar';
 import { sound } from '../utils/sound';
 
 export default function AllowlistIntake() {
@@ -10,6 +11,9 @@ export default function AllowlistIntake() {
   const [inviteCode, setInviteCode] = useState('');
   const [validatingCode, setValidatingCode] = useState(false);
   const [inviteCodeStatus, setInviteCodeStatus] = useState(null); // { valid: true/false, message }
+
+  const [avatarUrl, setAvatarUrl] = useState(null);
+  const [avatarLoading, setAvatarLoading] = useState(false);
 
   // 3 Missions state tracking
   const [missions, setMissions] = useState({
@@ -24,6 +28,24 @@ export default function AllowlistIntake() {
   const [completedData, setCompletedData] = useState(null);
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
+
+  // Debounced real Twitter avatar lookup
+  useEffect(() => {
+    const clean = twitterUsername.replace('@', '').trim();
+    if (clean.length >= 2) {
+      setAvatarLoading(true);
+      const timer = setTimeout(() => {
+        fetchTwitterAvatar(clean).then((url) => {
+          setAvatarUrl(url);
+          setAvatarLoading(false);
+        });
+      }, 300);
+      return () => clearTimeout(timer);
+    } else {
+      setAvatarUrl(null);
+      setAvatarLoading(false);
+    }
+  }, [twitterUsername]);
 
   // Auto-read ?ref=XYZ parameter from URL on load
   useEffect(() => {
@@ -343,16 +365,20 @@ export default function AllowlistIntake() {
             {/* Live Twitter Avatar Preview Card (matching originalbrokers.art) */}
             {twitterUsername.replace('@', '').length >= 2 && (
               <div className="p-3 rounded-xl bg-[#04060A] border border-[#1E293B] flex items-center gap-3 animate-in fade-in slide-in-from-top-1 duration-200">
-                <div className="relative w-10 h-10 rounded-full overflow-hidden border border-[#00F58C]/40 flex-shrink-0 bg-white/5">
-                  <img
-                    src={`https://unavatar.io/x/${twitterUsername.replace('@', '')}`}
-                    alt={twitterUsername}
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = `https://api.dicebear.com/7.x/bottts/svg?seed=${twitterUsername}`;
-                    }}
-                    className="w-full h-full object-cover"
-                  />
+                <div className="relative w-11 h-11 rounded-full overflow-hidden border border-[#00F58C]/40 flex-shrink-0 bg-black flex items-center justify-center">
+                  {avatarLoading ? (
+                    <Loader2 size={16} className="text-[#00F58C] animate-spin" />
+                  ) : (
+                    <img
+                      src={avatarUrl || `https://unavatar.io/x/${twitterUsername.replace('@', '')}`}
+                      alt={twitterUsername}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = `https://unavatar.io/x/${twitterUsername.replace('@', '')}`;
+                      }}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
                 </div>
                 <div className="space-y-0.5 min-w-0">
                   <div className="font-mono text-xs text-white font-bold truncate flex items-center gap-1.5">
