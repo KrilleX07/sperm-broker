@@ -247,7 +247,7 @@ export default function AllowlistIntake() {
         wallet: cleanWallet,
         myRefCode,
         avatarUrl: avatarUrl || `https://unavatar.io/x/${twitterUsername.replace('@', '')}`,
-        spotNumber: Math.floor(1000 + Math.random() * 8999),
+        spotNumber: res.spotNumber || '0001',
         inviteUsed: inviteCode || 'NONE',
         refLink: `${window.location.origin}/?ref=${myRefCode}`,
       };

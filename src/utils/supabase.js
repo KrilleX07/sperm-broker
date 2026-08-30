@@ -22,6 +22,24 @@ export const MASTER_INVITE_CODES = [
 ];
 
 /**
+ * Get exact total registered count from Supabase with 0 latency
+ */
+export async function getWhitelistCount() {
+  try {
+    const { count, error } = await supabase
+      .from('whitelist')
+      .select('*', { count: 'exact', head: true });
+
+    if (!error && typeof count === 'number') {
+      return count;
+    }
+  } catch (e) {
+    console.warn('Count fetch notice:', e);
+  }
+  return 0;
+}
+
+/**
  * Check if a Twitter handle is already registered in DB
  */
 export async function checkTwitterExists(twitter) {
@@ -99,7 +117,7 @@ export async function validateInviteCode(code) {
 }
 
 /**
- * Register user in Supabase whitelist table with strict duplication protection
+ * Register user in Supabase whitelist table with strict duplication protection and honest sequential spot number
  */
 export async function registerWhitelistUser({ wallet, twitter, inviteCode, myRefCode }) {
   const cleanWallet = wallet.toLowerCase().trim();
@@ -127,13 +145,20 @@ export async function registerWhitelistUser({ wallet, twitter, inviteCode, myRef
   }
 
   try {
+    // Honest sequential spot number from DB (1 -> '0001', 42 -> '0042')
+    const currentCount = await getWhitelistCount();
+    const spotNumber = String(currentCount + 1).padStart(4, '0');
+
+    const metaParts = [`code:${myRefCode}`, `spot:${spotNumber}`];
+    if (cleanInvite) metaParts.push(`ref:${cleanInvite}`);
+
     const { data, error } = await supabase
       .from('whitelist')
       .insert([
         {
           wallet_address: cleanWallet,
           twitter_handle: cleanTwitter,
-          discord_handle: cleanInvite ? `ref:${cleanInvite}|code:${myRefCode}` : `code:${myRefCode}`,
+          discord_handle: metaParts.join('|'),
         }
       ])
       .select();
@@ -150,7 +175,12 @@ export async function registerWhitelistUser({ wallet, twitter, inviteCode, myRef
       return { success: false, message: error.message };
     }
 
-    return { success: true, alreadyExists: false, refCode: myRefCode, data };
+    return { 
+      success: true, 
+      spotNumber, 
+      refCode: myRefCode, 
+      data 
+    };
   } catch (err) {
     console.error('Supabase registration error:', err);
     return { success: false, message: err.message || 'Failed to submit.' };
