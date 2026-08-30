@@ -24,9 +24,20 @@ export default function Navbar({ isAudioOn, setIsAudioOn }) {
           </span>
         </a>
 
-        {/* Right Navigation */}
-        <nav className="flex items-center gap-5 sm:gap-8 font-pixel text-[10px] sm:text-xs">
+        {/* Right Navigation (Sound toggle first, @SpermBrokers on the right) */}
+        <nav className="flex items-center gap-4 sm:gap-6 font-pixel text-[10px] sm:text-xs">
           
+          {/* Sound Toggle */}
+          <button
+            type="button"
+            onClick={toggleSound}
+            title={isAudioOn ? 'Mute sound' : 'Enable sound'}
+            className="p-2 rounded-lg text-slate-500 hover:text-[#00F58C] transition"
+          >
+            {isAudioOn ? <Volume2 size={16} className="text-[#00F58C]" /> : <VolumeX size={16} />}
+          </button>
+
+          {/* X Link */}
           <a
             href="https://x.com/SpermBrokers"
             target="_blank"
@@ -36,15 +47,6 @@ export default function Navbar({ isAudioOn, setIsAudioOn }) {
           >
             <span>@SpermBrokers</span>
           </a>
-
-          {/* Sound Toggle */}
-          <button
-            onClick={toggleSound}
-            title={isAudioOn ? 'Mute sound' : 'Enable sound'}
-            className="p-2 rounded-lg text-slate-500 hover:text-[#00F58C] transition"
-          >
-            {isAudioOn ? <Volume2 size={16} className="text-[#00F58C]" /> : <VolumeX size={16} />}
-          </button>
 
         </nav>
 
