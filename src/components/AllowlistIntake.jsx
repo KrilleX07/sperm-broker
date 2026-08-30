@@ -57,6 +57,11 @@ export default function AllowlistIntake() {
           setCompletedData(parsed);
           setTwitterUsername(parsed.twitter);
           setWalletAddress(parsed.wallet);
+          setMissions({
+            follow: { completed: true, countdown: 0 },
+            repost: { completed: true, countdown: 0 },
+            tag: { completed: true, countdown: 0 },
+          });
           setCurrentStep(4);
         }
       }
@@ -320,56 +325,56 @@ export default function AllowlistIntake() {
             setCurrentStep(1);
           }}
           className={`py-3 px-2 rounded-lg border transition-all ${
-            currentStep === 1
+            completedData || currentStep === 1
               ? 'border-[#00F58C] text-[#00F58C] bg-[#00F58C]/10 shadow-sm shadow-[#00F58C]/20'
               : currentStep > 1
               ? 'border-[#00F58C]/40 text-[#00F58C] bg-transparent cursor-pointer'
               : 'border-transparent text-slate-500'
           }`}
         >
-          01 IDENTITY
+          {completedData ? '01 IDENTITY ✓' : '01 IDENTITY'}
         </button>
 
         {/* Tab 2 */}
         <button
           type="button"
-          disabled={!twitterUsername}
+          disabled={!twitterUsername && !completedData}
           onClick={() => {
             if (completedData || !twitterUsername) return;
             sound.playClick();
             setCurrentStep(2);
           }}
           className={`py-3 px-2 rounded-lg border transition-all ${
-            currentStep === 2
+            completedData || currentStep === 2
               ? 'border-[#00F58C] text-[#00F58C] bg-[#00F58C]/10 shadow-sm shadow-[#00F58C]/20'
-              : allMissionsDone
+              : allMissionsDone || currentStep > 2
               ? 'border-[#00F58C]/40 text-[#00F58C] bg-transparent cursor-pointer'
-              : currentStep > 2
-              ? 'border-[#00F58C]/40 text-[#00F58C]'
               : 'border-transparent text-slate-600 cursor-not-allowed'
           }`}
         >
-          02 MISSIONS
+          {completedData ? '02 MISSIONS ✓' : '02 MISSIONS'}
         </button>
 
         {/* Tab 3 */}
         <button
           type="button"
-          disabled={!allMissionsDone}
+          disabled={!allMissionsDone && !completedData}
           onClick={() => {
             if (completedData || !allMissionsDone) return;
             sound.playClick();
             setCurrentStep(3);
           }}
           className={`py-3 px-2 rounded-lg border transition-all ${
-            currentStep === 3
+            completedData || currentStep === 3
               ? 'border-[#00F58C] text-[#00F58C] bg-[#00F58C]/10 shadow-sm shadow-[#00F58C]/20'
+              : currentStep > 3
+              ? 'border-[#00F58C]/40 text-[#00F58C] bg-transparent'
               : allMissionsDone && currentStep > 1
               ? 'border-transparent text-slate-400 hover:text-white cursor-pointer'
               : 'border-transparent text-slate-600 cursor-not-allowed opacity-50'
           }`}
         >
-          03 WALLET
+          {completedData ? '03 WALLET ✓' : '03 WALLET'}
         </button>
 
       </div>
