@@ -101,6 +101,18 @@ export default function Navbar({ isAudioOn, setIsAudioOn, wallet, onOpenWallet }
 
           {/* Right Action Controls */}
           <div className="hidden sm:flex items-center gap-3">
+            {/* Twitter / X Link */}
+            <a
+              href="https://x.com/SpermBrokers"
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => sound.playClick()}
+              title="Follow @SpermBrokers on X"
+              className="p-2.5 rounded-xl border border-white/10 bg-white/5 hover:border-hood-green/40 hover:text-hood-green text-slate-300 font-bold transition flex items-center justify-center text-sm"
+            >
+              <span className="leading-none text-base">𝕏</span>
+            </a>
+
             {/* Audio Toggle */}
             <button
               onClick={toggleSound}
@@ -173,6 +185,19 @@ export default function Navbar({ isAudioOn, setIsAudioOn, wallet, onOpenWallet }
           </div>
 
           <div className="pt-4 border-t border-white/10 flex items-center justify-between gap-3">
+            <a
+              href="https://x.com/SpermBrokers"
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => {
+                sound.playClick();
+                setMobileMenuOpen(false);
+              }}
+              className="p-2.5 rounded-xl border border-white/10 bg-white/5 text-slate-300 hover:text-hood-green flex items-center justify-center"
+            >
+              <span className="text-base leading-none">𝕏</span>
+            </a>
+
             <button
               onClick={toggleSound}
               className="p-2.5 rounded-xl border border-white/10 bg-white/5 text-slate-300"

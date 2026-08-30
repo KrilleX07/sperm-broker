@@ -74,14 +74,14 @@ export default function Footer() {
 
             <div className="flex flex-wrap gap-2.5">
               <a
-                href="https://x.com"
+                href="https://x.com/SpermBrokers"
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => sound.playClick()}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0D111A] border border-white/10 hover:border-hood-green/50 text-white text-xs font-mono font-bold transition hover:scale-105"
               >
                 <span className="text-base leading-none">𝕏</span>
-                <span>X</span>
+                <span>@SpermBrokers</span>
               </a>
               <a
                 href="https://opensea.io"
