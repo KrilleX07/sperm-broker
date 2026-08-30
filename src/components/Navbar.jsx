@@ -1,24 +1,13 @@
-import React, { useState } from 'react';
-import { Volume2, VolumeX, Wallet, ShieldCheck, Menu, X, Sparkles, TrendingUp, Lock } from 'lucide-react';
+import React from 'react';
+import { Volume2, VolumeX, Wallet, ShieldCheck, Sparkles, Lock } from 'lucide-react';
 import { sound } from '../utils/sound';
 
 export default function Navbar({ isAudioOn, setIsAudioOn, wallet, onOpenWallet }) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   const toggleSound = () => {
     sound.enabled = !isAudioOn;
     setIsAudioOn(!isAudioOn);
     if (!isAudioOn) sound.playToggle();
   };
-
-  const navLinks = [
-    { href: '#gallery', label: 'Gallery' },
-    { href: '#staking', label: 'Staking (Soon)' },
-    { href: '#lore', label: 'Lore' },
-    { href: '#traits', label: 'Traits' },
-    { href: '#roadmap', label: 'Roadmap' },
-    { href: '#faq', label: 'FAQ' },
-  ];
 
   return (
     <header className="sticky top-0 z-50 w-full">
@@ -30,19 +19,17 @@ export default function Navbar({ isAudioOn, setIsAudioOn, wallet, onOpenWallet }
             ROBINHOOD CHAIN MAINNET: LIVE
           </span>
           <span className="text-slate-400">|</span>
+          <span className="text-emerald-400 font-bold">WHITELIST REGISTRATION: OPEN</span>
+          <span className="text-slate-400">|</span>
+          <span className="text-purple-400">TOTAL SUPPLY: 1,000 BROKERS</span>
+          <span className="text-slate-400">|</span>
           <span className="text-amber-400 flex items-center gap-1">
             <Lock size={12} /> STAKING VAULT: PHASE 2 COMING SOON
           </span>
           <span className="text-slate-400">|</span>
-          <span className="text-emerald-400">FLOOR: 0.088 ETH</span>
+          <span className="text-cyan-400">11 UNIQUE GENERATIVE ARCHETYPES</span>
           <span className="text-slate-400">|</span>
-          <span className="text-cyan-400">TOTAL VOLUME: 420.69 ETH</span>
-          <span className="text-slate-400">|</span>
-          <span className="text-purple-400">TOTAL SUPPLY: 1,000 BROKERS</span>
-          <span className="text-slate-400">|</span>
-          <span className="text-rose-400">GAS: 0.0001 GWEI</span>
-          <span className="text-slate-400">|</span>
-          <span className="text-hood-green font-semibold">1/1 GOLDEN GOD ARCHIVED IN VAULT</span>
+          <span className="text-hood-green font-semibold">1/1 GOLDEN GOD IN POOL</span>
           {/* Repeat for seamless loop */}
           <span className="text-slate-400">|</span>
           <span className="flex items-center gap-1.5 text-hood-green font-bold">
@@ -50,11 +37,9 @@ export default function Navbar({ isAudioOn, setIsAudioOn, wallet, onOpenWallet }
             ROBINHOOD CHAIN MAINNET: LIVE
           </span>
           <span className="text-slate-400">|</span>
-          <span className="text-amber-400 flex items-center gap-1">
-            <Lock size={12} /> STAKING VAULT: PHASE 2 COMING SOON
-          </span>
+          <span className="text-emerald-400 font-bold">WHITELIST REGISTRATION: OPEN</span>
           <span className="text-slate-400">|</span>
-          <span className="text-emerald-400">FLOOR: 0.088 ETH</span>
+          <span className="text-purple-400">TOTAL SUPPLY: 1,000 BROKERS</span>
         </div>
       </div>
 
@@ -84,23 +69,14 @@ export default function Navbar({ isAudioOn, setIsAudioOn, wallet, onOpenWallet }
             </div>
           </a>
 
-          {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center gap-6">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => sound.playClick()}
-                className="text-sm font-medium text-slate-300 hover:text-hood-green transition-colors py-1 relative group"
-              >
-                {link.label}
-                <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-hood-green group-hover:w-full transition-all duration-300 rounded-full"></span>
-              </a>
-            ))}
-          </nav>
+          {/* Center Badge */}
+          <div className="hidden md:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-slate-300">
+            <span className="w-2 h-2 rounded-full bg-hood-green animate-pulse"></span>
+            <span>Early Access Whitelist Application</span>
+          </div>
 
           {/* Right Action Controls */}
-          <div className="hidden sm:flex items-center gap-3">
+          <div className="flex items-center gap-3">
             {/* Twitter / X Link */}
             <a
               href="https://x.com/SpermBrokers"
@@ -132,7 +108,7 @@ export default function Navbar({ isAudioOn, setIsAudioOn, wallet, onOpenWallet }
                 sound.playClick();
                 onOpenWallet();
               }}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 ${
+              className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 ${
                 wallet.connected
                   ? 'bg-emerald-950/80 border border-emerald-500/50 text-emerald-300 shadow-md shadow-emerald-900/40 hover:border-emerald-400'
                   : 'bg-gradient-to-r from-hood-green to-emerald-400 text-black font-extrabold shadow-lg shadow-hood-green/25 hover:shadow-hood-green/40 hover:scale-[1.02]'
@@ -146,79 +122,15 @@ export default function Navbar({ isAudioOn, setIsAudioOn, wallet, onOpenWallet }
               ) : (
                 <>
                   <Wallet size={17} />
-                  <span>Connect Wallet</span>
+                  <span className="hidden sm:inline">Connect Wallet</span>
+                  <span className="sm:hidden">Connect</span>
                 </>
               )}
             </button>
           </div>
 
-          {/* Mobile Hamburger Button */}
-          <button
-            onClick={() => {
-              sound.playClick();
-              setMobileMenuOpen(!mobileMenuOpen);
-            }}
-            className="lg:hidden p-2.5 rounded-xl border border-white/10 bg-white/5 text-slate-300 hover:text-white"
-          >
-            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
         </div>
       </div>
-
-      {/* Mobile Dropdown Menu */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#0a0d14]/95 backdrop-blur-2xl border-b border-white/10 px-6 py-6 space-y-4 animate-in slide-in-from-top duration-200">
-          <div className="grid grid-cols-2 gap-2">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => {
-                  sound.playClick();
-                  setMobileMenuOpen(false);
-                }}
-                className="p-3 rounded-lg bg-white/5 text-slate-200 font-medium text-sm hover:bg-hood-green/10 hover:text-hood-green transition"
-              >
-                {link.label}
-              </a>
-            ))}
-          </div>
-
-          <div className="pt-4 border-t border-white/10 flex items-center justify-between gap-3">
-            <a
-              href="https://x.com/SpermBrokers"
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => {
-                sound.playClick();
-                setMobileMenuOpen(false);
-              }}
-              className="p-2.5 rounded-xl border border-white/10 bg-white/5 text-slate-300 hover:text-hood-green flex items-center justify-center"
-            >
-              <span className="text-base leading-none">𝕏</span>
-            </a>
-
-            <button
-              onClick={toggleSound}
-              className="p-2.5 rounded-xl border border-white/10 bg-white/5 text-slate-300"
-            >
-              {isAudioOn ? <Volume2 size={18} className="text-hood-green" /> : <VolumeX size={18} />}
-            </button>
-
-            <button
-              onClick={() => {
-                sound.playClick();
-                setMobileMenuOpen(false);
-                onOpenWallet();
-              }}
-              className="flex-1 py-2.5 px-4 rounded-xl bg-hood-green text-black font-extrabold text-xs tracking-wider flex items-center justify-center gap-2"
-            >
-              <Wallet size={16} />
-              {wallet.connected ? `${wallet.address.slice(0, 6)}...` : 'Connect Wallet'}
-            </button>
-          </div>
-        </div>
-      )}
     </header>
   );
 }
