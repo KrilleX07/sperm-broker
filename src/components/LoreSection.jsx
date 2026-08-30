@@ -1,28 +1,28 @@
 import React from 'react';
 import { BookOpen, Flame, Cpu, Globe } from 'lucide-react';
 
-export default function LoreSection({ lang, t }) {
+export default function LoreSection() {
   const chapters = [
     {
       icon: Flame,
       color: 'text-amber-400',
       bgColor: 'bg-amber-400/10 border-amber-400/30',
-      title: t.lore.chapter1Title,
-      text: t.lore.chapter1Text,
+      title: "1. Spawned in the Trading Pit",
+      text: "When centralized market makers disabled the Buy button during the legendary short squeeze, a genetic uprising ignited within the fastest, most relentless trader cells.",
     },
     {
       icon: Cpu,
       color: 'text-cyber-cyan',
       bgColor: 'bg-cyber-cyan/10 border-cyber-cyan/30',
-      title: t.lore.chapter2Title,
-      text: t.lore.chapter2Text,
+      title: "2. Evolution of the 11 Archetypes",
+      text: "Only the strongest survived the volatility: from navy pinstripe veterans and MEV hackers to diamond-handed degens and lunar astronauts.",
     },
     {
       icon: Globe,
       color: 'text-hood-green',
       bgColor: 'bg-hood-green/10 border-hood-green/30',
-      title: t.lore.chapter3Title,
-      text: t.lore.chapter3Text,
+      title: "3. The Robinhood Chain Era",
+      text: "United under the celestial glory of the Golden God, the Sperm Brokers arrived on the Robinhood Chain to permanently decentralize wealth and liquidity.",
     },
   ];
 
@@ -37,13 +37,13 @@ export default function LoreSection({ lang, t }) {
         <div className="text-center space-y-4 mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-hood-green/10 border border-hood-green/30 text-hood-green text-xs font-mono font-bold tracking-wider">
             <BookOpen size={14} />
-            <span>{t.lore.badge}</span>
+            <span>THE NARRATIVE</span>
           </div>
           <h2 className="text-4xl sm:text-5xl font-extrabold font-display text-white tracking-tight">
-            {t.lore.title}
+            Lore & Philosophy
           </h2>
           <p className="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">
-            {t.lore.subtitle}
+            From the smoke-filled pits of Wall Street to decentralized financial supremacy on Robinhood Chain.
           </p>
         </div>
 

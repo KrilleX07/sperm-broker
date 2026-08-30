@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { Sparkles, Search, Filter, Layers, Eye, ExternalLink, Zap } from 'lucide-react';
+import { Sparkles, Search, Filter, Layers, Eye, Zap } from 'lucide-react';
 import { NFT_COLLECTION, RARITY_TIERS } from '../data/nfts';
 import { sound } from '../utils/sound';
 
-export default function Gallery({ lang, t, onSelectNFT }) {
+export default function Gallery({ onSelectNFT }) {
   const [selectedRarity, setSelectedRarity] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -19,11 +19,11 @@ export default function Gallery({ lang, t, onSelectNFT }) {
       const matchesTraits = nft.traits.some(
         (t) => t.category.toLowerCase().includes(query) || t.value.toLowerCase().includes(query)
       );
-      const matchesDesc = nft.description[lang].toLowerCase().includes(query);
+      const matchesDesc = nft.description.en.toLowerCase().includes(query);
 
       return matchesRarity && (matchesName || matchesTitle || matchesTraits || matchesDesc);
     });
-  }, [selectedRarity, searchQuery, lang]);
+  }, [selectedRarity, searchQuery]);
 
   return (
     <section id="gallery" className="py-24 relative">
@@ -34,13 +34,13 @@ export default function Gallery({ lang, t, onSelectNFT }) {
           <div className="space-y-3">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-hood-green/10 border border-hood-green/30 text-hood-green text-xs font-mono font-bold tracking-wider">
               <Sparkles size={14} />
-              <span>{t.gallery.badge}</span>
+              <span>ALL 11 CHARACTERS</span>
             </div>
             <h2 className="text-4xl sm:text-5xl font-extrabold font-display text-white tracking-tight">
-              {t.gallery.title}
+              Character Gallery
             </h2>
             <p className="text-slate-400 text-sm sm:text-base max-w-xl">
-              {t.gallery.subtitle}
+              Explore all 11 unique 16-bit pixel masterpieces. Click any card to inspect 3D holographic foil, rarity metrics, and full lore.
             </p>
           </div>
 
@@ -51,7 +51,7 @@ export default function Gallery({ lang, t, onSelectNFT }) {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t.gallery.searchPlaceholder}
+              placeholder="Search by name or trait..."
               className="w-full pl-10 pr-4 py-3 rounded-2xl bg-[#0D111A] border border-white/10 text-white text-sm focus:outline-none focus:border-hood-green placeholder:text-slate-600 transition"
             />
           </div>
@@ -61,7 +61,7 @@ export default function Gallery({ lang, t, onSelectNFT }) {
         <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 scrollbar-none">
           <div className="flex items-center gap-1.5 text-xs text-slate-500 font-mono pr-2">
             <Filter size={14} />
-            <span>{t.gallery.rarity}:</span>
+            <span>Rarity:</span>
           </div>
 
           {RARITY_TIERS.map((tier) => {
@@ -89,7 +89,7 @@ export default function Gallery({ lang, t, onSelectNFT }) {
         {filteredNFTs.length === 0 ? (
           <div className="p-16 rounded-3xl bg-[#0D111A]/40 border border-white/10 text-center space-y-3">
             <div className="text-4xl">🔍</div>
-            <div className="text-lg font-bold text-white">{t.gallery.noResults}</div>
+            <div className="text-lg font-bold text-white">No brokers matched your query</div>
             <button
               onClick={() => {
                 sound.playClick();
@@ -152,7 +152,7 @@ export default function Gallery({ lang, t, onSelectNFT }) {
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <span className="px-4 py-2 rounded-xl bg-hood-green text-black font-extrabold text-xs tracking-wider flex items-center gap-2 shadow-lg shadow-hood-green/30">
                         <Eye size={15} />
-                        <span>{t.gallery.inspectCard}</span>
+                        <span>Inspect Dossier</span>
                       </span>
                     </div>
                   </div>
@@ -182,10 +182,10 @@ export default function Gallery({ lang, t, onSelectNFT }) {
 
                     {/* Staking Yield Info */}
                     <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-mono">
-                      <span className="text-slate-400">{t.gallery.stakingBonus}</span>
+                      <span className="text-slate-400">Staking:</span>
                       <span className="text-hood-green font-bold flex items-center gap-1">
                         <Zap size={13} className="fill-hood-green" />
-                        +{nft.stakingYield} $SPRM
+                        +{nft.stakingYield} $SPRM/d
                       </span>
                     </div>
                   </div>

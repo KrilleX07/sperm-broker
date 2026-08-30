@@ -3,7 +3,7 @@ import { ArrowRight, Sparkles, ChevronLeft, ChevronRight, Zap, Shield, Flame, Ex
 import { NFT_COLLECTION, STATS } from '../data/nfts';
 import { sound } from '../utils/sound';
 
-export default function Hero({ lang, t, onSelectNFT }) {
+export default function Hero({ onSelectNFT }) {
   const [activeIndex, setActiveIndex] = useState(10); // Start on Mythic Golden God by default!
   const currentNFT = NFT_COLLECTION[activeIndex];
 
@@ -42,17 +42,17 @@ export default function Hero({ lang, t, onSelectNFT }) {
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-hood-green/10 border border-hood-green/30 text-hood-green text-xs font-mono font-bold tracking-wider shadow-sm shadow-hood-green/20">
               <span className="w-2 h-2 rounded-full bg-hood-green animate-ping"></span>
               <Sparkles size={14} />
-              <span>{t.hero.badge}</span>
+              <span>OFFICIAL COLLECTION • ROBINHOOD CHAIN</span>
             </div>
 
             {/* Main Title */}
             <div className="space-y-2">
               <h1 className="text-5xl sm:text-7xl font-extrabold font-display tracking-tight text-white leading-none">
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-slate-400">
-                  {t.hero.title1}
+                  SPERM
                 </span>{' '}
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-hood-green via-emerald-400 to-cyber-cyan text-neon-green">
-                  {t.hero.title2}
+                  BROKERS
                 </span>
               </h1>
               <p className="text-xl sm:text-2xl font-mono text-emerald-400 font-semibold tracking-wide">
@@ -62,29 +62,28 @@ export default function Hero({ lang, t, onSelectNFT }) {
 
             {/* Subtitle / Description */}
             <p className="text-slate-300 text-base sm:text-lg max-w-2xl leading-relaxed">
-              {t.hero.tagline}
+              The most unapologetic and bullish NFT collection on Wall Street. 11 legendary trader archetypes battling for liquidity and decentralized dominance on the Robinhood Chain.
             </p>
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
               <a
-                href="#mint"
-                onClick={() => {
-                  sound.playCash();
-                }}
+                href="#gallery"
+                onClick={() => sound.playCash()}
                 className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-hood-green via-emerald-400 to-emerald-500 text-black font-extrabold text-base tracking-wide flex items-center justify-center gap-3 shadow-xl shadow-hood-green/30 hover:shadow-hood-green/50 hover:scale-105 transition-all duration-300 group"
               >
-                <Zap size={20} className="fill-black" />
-                <span>{t.hero.mintBtn}</span>
+                <Sparkles size={20} className="fill-black" />
+                <span>Explore 11 Brokers</span>
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </a>
 
               <a
-                href="#gallery"
+                href="#staking"
                 onClick={() => sound.playClick()}
                 className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 hover:border-hood-green/40 text-white font-bold text-base flex items-center justify-center gap-2 transition duration-300"
               >
-                <span>{t.hero.exploreBtn}</span>
+                <Zap size={18} className="text-cyber-gold" />
+                <span>Staking Protocol (Soon)</span>
               </a>
             </div>
 
@@ -92,19 +91,19 @@ export default function Hero({ lang, t, onSelectNFT }) {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-white/10">
               <div className="p-4 rounded-2xl bg-[#0D111A]/60 border border-white/5">
                 <div className="text-2xl sm:text-3xl font-extrabold text-white font-mono">11</div>
-                <div className="text-xs text-slate-400 mt-1 font-medium">{t.hero.statArchetypes}</div>
+                <div className="text-xs text-slate-400 mt-1 font-medium">Archetypes</div>
               </div>
               <div className="p-4 rounded-2xl bg-[#0D111A]/60 border border-white/5">
                 <div className="text-2xl sm:text-3xl font-extrabold text-hood-green font-mono">1,000</div>
-                <div className="text-xs text-slate-400 mt-1 font-medium">{t.hero.statTotal}</div>
+                <div className="text-xs text-slate-400 mt-1 font-medium">Total Supply</div>
               </div>
               <div className="p-4 rounded-2xl bg-[#0D111A]/60 border border-white/5">
-                <div className="text-2xl sm:text-3xl font-extrabold text-cyber-cyan font-mono">0.05 ETH</div>
-                <div className="text-xs text-slate-400 mt-1 font-medium">{t.hero.statPrice}</div>
+                <div className="text-2xl sm:text-3xl font-extrabold text-cyber-cyan font-mono">0.088 ETH</div>
+                <div className="text-xs text-slate-400 mt-1 font-medium">Floor Price</div>
               </div>
               <div className="p-4 rounded-2xl bg-[#0D111A]/60 border border-white/5">
-                <div className="text-2xl sm:text-3xl font-extrabold text-cyber-gold font-mono">74.2%</div>
-                <div className="text-xs text-slate-400 mt-1 font-medium">{t.hero.statSold}</div>
+                <div className="text-2xl sm:text-3xl font-extrabold text-cyber-gold font-mono">Robinhood</div>
+                <div className="text-xs text-slate-400 mt-1 font-medium">L2 Chain</div>
               </div>
             </div>
 
@@ -164,7 +163,7 @@ export default function Hero({ lang, t, onSelectNFT }) {
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <span className="px-4 py-2 rounded-xl bg-white/20 backdrop-blur-md text-white font-bold text-sm border border-white/30 flex items-center gap-2">
                       <ExternalLink size={16} />
-                      {lang === 'ru' ? 'Открыть досье' : 'Inspect Dossier'}
+                      Inspect Dossier
                     </span>
                   </div>
                 </div>
@@ -189,7 +188,7 @@ export default function Hero({ lang, t, onSelectNFT }) {
                   </div>
 
                   <p className="text-xs text-slate-300 italic line-clamp-2">
-                    {currentNFT.quote[lang]}
+                    {currentNFT.quote.en}
                   </p>
 
                   {/* Quick Traits Preview Chips */}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Copy, Check, Send, ExternalLink, ShieldCheck, Heart } from 'lucide-react';
 import { sound } from '../utils/sound';
 
-export default function Footer({ lang, t }) {
+export default function Footer() {
   const [copied, setCopied] = useState(false);
   const contractAddress = "0x742d35Cc6634C0532925a3b844Bc454e4438f44e";
 
@@ -33,9 +33,7 @@ export default function Footer({ lang, t }) {
             </div>
             
             <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
-              {lang === 'ru'
-                ? 'Официальная генеративная 16-битная NFT коллекция из 1,000 уникальных брокеров на Robinhood Chain.'
-                : 'Official generative 16-bit retro NFT collection of 1,000 unique Wall Street brokers on Robinhood Chain.'}
+              Official generative 16-bit retro NFT collection of 1,000 unique Wall Street brokers engineered for the Robinhood Chain ecosystem.
             </p>
 
             {/* Contract copy bar */}
@@ -65,27 +63,32 @@ export default function Footer({ lang, t }) {
             <ul className="space-y-2 text-xs">
               <li>
                 <a href="#gallery" onClick={() => sound.playClick()} className="hover:text-hood-green transition">
-                  {lang === 'ru' ? 'Галерея всех 11 брокеров' : 'Character Gallery'}
-                </a>
-              </li>
-              <li>
-                <a href="#mint" onClick={() => sound.playClick()} className="hover:text-hood-green transition">
-                  {lang === 'ru' ? 'Минтинг Терминал' : 'Minting Terminal'}
+                  Character Gallery (11 Archetypes)
                 </a>
               </li>
               <li>
                 <a href="#staking" onClick={() => sound.playClick()} className="hover:text-hood-green transition">
-                  {lang === 'ru' ? 'Калькулятор Стейкинга $SPRM' : '$SPRM Staking Simulator'}
+                  $SPRM Staking Vault (Soon)
                 </a>
               </li>
               <li>
                 <a href="#lore" onClick={() => sound.playClick()} className="hover:text-hood-green transition">
-                  {lang === 'ru' ? 'История и Философия' : 'Lore & Philosophy'}
+                  Lore & Philosophy
+                </a>
+              </li>
+              <li>
+                <a href="#traits" onClick={() => sound.playClick()} className="hover:text-hood-green transition">
+                  Trait Matrix
                 </a>
               </li>
               <li>
                 <a href="#roadmap" onClick={() => sound.playClick()} className="hover:text-hood-green transition">
-                  {lang === 'ru' ? 'Дорожная Карта' : 'Roadmap'}
+                  Roadmap (2026-2027)
+                </a>
+              </li>
+              <li>
+                <a href="#faq" onClick={() => sound.playClick()} className="hover:text-hood-green transition">
+                  FAQ
                 </a>
               </li>
             </ul>
@@ -137,7 +140,7 @@ export default function Footer({ lang, t }) {
             </div>
 
             <p className="text-[11px] text-slate-500 italic">
-              {t.footer.disclaimer}
+              Disclaimer: Sperm Brokers is a digital art meme collection and Web3 cultural experiment on Robinhood Chain. Not financial advice. DYOR.
             </p>
           </div>
 
@@ -145,7 +148,7 @@ export default function Footer({ lang, t }) {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-          <div>{t.footer.copyright}</div>
+          <div>© 2026 Sperm Brokers NFT. All rights reserved.</div>
           <div className="flex items-center gap-1 font-mono text-[11px]">
             <span>Built with pure Degen Energy on</span>
             <span className="text-hood-green font-bold">Robinhood Chain</span>

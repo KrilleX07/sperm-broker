@@ -1,19 +1,19 @@
 import React from 'react';
 import { MapPin, CheckCircle2, CircleDashed, Rocket, Cpu, Landmark, Sparkles } from 'lucide-react';
 
-export default function Roadmap({ lang, t }) {
+export default function Roadmap() {
   const phases = [
     {
       phase: "01",
-      tag: "IN PROGRESS (74% MINTED)",
+      tag: "GENESIS COMPLETED (1,000 ARCHIVES)",
       tagColor: "bg-hood-green/20 text-hood-green border-hood-green/40",
       icon: Rocket,
-      title: t.roadmap.q1Title,
-      desc: t.roadmap.q1Desc,
+      title: "Phase 1: Genesis Spawn & Reveal",
+      desc: "Smart contract deployment on Robinhood Chain, generation of 1,000 generative brokers, trait matrix indexing, and secondary marketplace verification.",
       milestones: [
         "Smart Contract Deployment on Robinhood Chain",
-        "Community Whitelist & OG Discord Role",
-        "Public Mint of 1,000 Generative Brokers",
+        "Community Whitelist & OG Discord Lounge",
+        "1,000 Generative Broker Archetype Reveal",
         "Secondary Marketplace Verification"
       ]
     },
@@ -22,8 +22,8 @@ export default function Roadmap({ lang, t }) {
       tag: "UP NEXT (Q2 2026)",
       tagColor: "bg-cyber-cyan/20 text-cyber-cyan border-cyber-cyan/40",
       icon: Cpu,
-      title: t.roadmap.q2Title,
-      desc: t.roadmap.q2Desc,
+      title: "Phase 2: Staking & $SPRM Token",
+      desc: "Non-custodial staking protocol launch, $SPRM utility token airdrop, 100% royalty share to stakers, and automated trading sniper bot integration.",
       milestones: [
         "Non-Custodial Staking Contract Launch",
         "$SPRM Utility Token Airdrop",
@@ -36,8 +36,8 @@ export default function Roadmap({ lang, t }) {
       tag: "DEVELOPMENT (Q3 2026)",
       tagColor: "bg-cyber-gold/20 text-cyber-gold border-cyber-gold/40",
       icon: Landmark,
-      title: t.roadmap.q3Title,
-      desc: t.roadmap.q3Desc,
+      title: "Phase 3: The Hedge DAO & Alpha Terminal",
+      desc: "Community-governed hedge vault deployment, institutional-grade arbitrage bots, and private trading alpha dashboard for holders.",
       milestones: [
         "Robinhood Hedge DAO Vault",
         "Community MEV & Trading Arbitrage Pool",
@@ -50,8 +50,8 @@ export default function Roadmap({ lang, t }) {
       tag: "FUTURE VISION (Q4 2026+)",
       tagColor: "bg-cyber-pink/20 text-cyber-pink border-cyber-pink/40",
       icon: Sparkles,
-      title: t.roadmap.q4Title,
-      desc: t.roadmap.q4Desc,
+      title: "Phase 4: 3D Metaverse & Global Takeover",
+      desc: "High-definition 3D avatars for virtual worlds, physical luxury streetwear drops, and private annual investor summits in Miami and NYC.",
       milestones: [
         "3D Rigged Metaverse Avatars",
         "Limited Luxury Streetwear Merch Drop",
@@ -69,13 +69,13 @@ export default function Roadmap({ lang, t }) {
         <div className="text-center space-y-4 mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-hood-green/10 border border-hood-green/30 text-hood-green text-xs font-mono font-bold tracking-wider">
             <MapPin size={14} />
-            <span>{t.roadmap.badge}</span>
+            <span>THE MASTERPLAN</span>
           </div>
           <h2 className="text-4xl sm:text-5xl font-extrabold font-display text-white tracking-tight">
-            {t.roadmap.title}
+            Roadmap (2026-2027)
           </h2>
           <p className="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">
-            {t.roadmap.subtitle}
+            Our strategic trajectory to conquer the decentralized markets on Robinhood Chain.
           </p>
         </div>
 

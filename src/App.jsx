@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import MintSection from './components/MintSection';
 import Gallery from './components/Gallery';
 import NFTModal from './components/NFTModal';
 import StakingCalculator from './components/StakingCalculator';
@@ -11,10 +10,8 @@ import Roadmap from './components/Roadmap';
 import FAQ from './components/FAQ';
 import WalletModal from './components/WalletModal';
 import Footer from './components/Footer';
-import { translations } from './data/translations';
 
 export default function App() {
-  const [lang, setLang] = useState('ru');
   const [isAudioOn, setIsAudioOn] = useState(true);
   const [activeNFTModal, setActiveNFTModal] = useState(null);
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
@@ -26,8 +23,6 @@ export default function App() {
     network: '',
   });
 
-  const t = translations[lang];
-
   return (
     <div className="min-h-screen bg-[#07090E] text-slate-100 selection:bg-hood-green selection:text-black">
       {/* Scanline CRT overlay effect for authentic 16-bit terminal aesthetic */}
@@ -35,8 +30,6 @@ export default function App() {
 
       {/* Top Navbar & Ticker */}
       <Navbar
-        lang={lang}
-        setLang={setLang}
         isAudioOn={isAudioOn}
         setIsAudioOn={setIsAudioOn}
         wallet={wallet}
@@ -47,69 +40,37 @@ export default function App() {
       <main className="relative z-10">
         {/* Hero Section */}
         <Hero
-          lang={lang}
-          t={t}
-          onSelectNFT={(nft) => setActiveNFTModal(nft)}
-        />
-
-        {/* Live Web3 Minting Terminal */}
-        <MintSection
-          lang={lang}
-          t={t}
-          wallet={wallet}
-          onOpenWallet={() => setIsWalletModalOpen(true)}
           onSelectNFT={(nft) => setActiveNFTModal(nft)}
         />
 
         {/* Interactive NFT Collection Gallery */}
         <Gallery
-          lang={lang}
-          t={t}
           onSelectNFT={(nft) => setActiveNFTModal(nft)}
         />
 
-        {/* DeFi $SPRM Staking Yield Simulator */}
-        <StakingCalculator
-          lang={lang}
-          t={t}
-        />
+        {/* DeFi $SPRM Staking Vault (Coming Soon) */}
+        <StakingCalculator />
 
         {/* The Lore & Backstory */}
-        <LoreSection
-          lang={lang}
-          t={t}
-        />
+        <LoreSection />
 
         {/* Trait Matrix Breakdown */}
-        <TraitMatrix
-          lang={lang}
-        />
+        <TraitMatrix />
 
         {/* 2026-2027 Roadmap */}
-        <Roadmap
-          lang={lang}
-          t={t}
-        />
+        <Roadmap />
 
         {/* Frequently Asked Questions */}
-        <FAQ
-          lang={lang}
-          t={t}
-        />
+        <FAQ />
       </main>
 
       {/* Footer */}
-      <Footer
-        lang={lang}
-        t={t}
-      />
+      <Footer />
 
       {/* NFT Dossier Detail Modal */}
       {activeNFTModal && (
         <NFTModal
           nft={activeNFTModal}
-          lang={lang}
-          t={t}
           onClose={() => setActiveNFTModal(null)}
         />
       )}
@@ -120,8 +81,6 @@ export default function App() {
         onClose={() => setIsWalletModalOpen(false)}
         wallet={wallet}
         setWallet={setWallet}
-        lang={lang}
-        t={t}
       />
     </div>
   );

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { X, ShieldCheck, Wallet, ArrowRight, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { X, ShieldCheck, Wallet, ArrowRight, RefreshCw } from 'lucide-react';
 import { sound } from '../utils/sound';
 
-export default function WalletModal({ isOpen, onClose, wallet, setWallet, lang, t }) {
+export default function WalletModal({ isOpen, onClose, wallet, setWallet }) {
   const [connectingWallet, setConnectingWallet] = useState(null);
 
   if (!isOpen) return null;
@@ -93,10 +93,10 @@ export default function WalletModal({ isOpen, onClose, wallet, setWallet, lang, 
             <span>WEB3 AUTHENTICATION</span>
           </div>
           <h3 className="text-2xl font-extrabold font-display text-white">
-            {wallet.connected ? 'Wallet Overview' : t.wallet.modalTitle}
+            {wallet.connected ? 'Wallet Overview' : 'Connect Web3 Wallet'}
           </h3>
           <p className="text-xs text-slate-400">
-            {t.wallet.subtitle}
+            Choose your preferred wallet to interact with Robinhood Chain
           </p>
         </div>
 
@@ -126,7 +126,7 @@ export default function WalletModal({ isOpen, onClose, wallet, setWallet, lang, 
               onClick={handleDisconnect}
               className="w-full py-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 text-xs font-mono font-bold transition"
             >
-              {t.wallet.disconnect}
+              Disconnect Wallet
             </button>
           </div>
         ) : (

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Volume2, VolumeX, Globe, Wallet, ShieldCheck, Menu, X, Sparkles, TrendingUp } from 'lucide-react';
+import { Volume2, VolumeX, Wallet, ShieldCheck, Menu, X, Sparkles, TrendingUp } from 'lucide-react';
 import { sound } from '../utils/sound';
 
-export default function Navbar({ lang, setLang, isAudioOn, setIsAudioOn, wallet, onOpenWallet }) {
+export default function Navbar({ isAudioOn, setIsAudioOn, wallet, onOpenWallet }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const toggleSound = () => {
@@ -11,19 +11,13 @@ export default function Navbar({ lang, setLang, isAudioOn, setIsAudioOn, wallet,
     if (!isAudioOn) sound.playToggle();
   };
 
-  const toggleLanguage = () => {
-    sound.playClick();
-    setLang(lang === 'ru' ? 'en' : 'ru');
-  };
-
   const navLinks = [
-    { href: '#gallery', labelRu: 'Галерея', labelEn: 'Gallery' },
-    { href: '#mint', labelRu: 'Минт', labelEn: 'Mint' },
-    { href: '#staking', labelRu: 'Стейкинг $SPRM', labelEn: 'Staking $SPRM' },
-    { href: '#lore', labelRu: 'Лор', labelEn: 'Lore' },
-    { href: '#traits', labelRu: 'Трейты', labelEn: 'Traits' },
-    { href: '#roadmap', labelRu: 'Roadmap', labelEn: 'Roadmap' },
-    { href: '#faq', labelRu: 'FAQ', labelEn: 'FAQ' },
+    { href: '#gallery', label: 'Gallery' },
+    { href: '#staking', label: 'Staking (Soon)' },
+    { href: '#lore', label: 'Lore' },
+    { href: '#traits', label: 'Traits' },
+    { href: '#roadmap', label: 'Roadmap' },
+    { href: '#faq', label: 'FAQ' },
   ];
 
   return (
@@ -37,18 +31,18 @@ export default function Navbar({ lang, setLang, isAudioOn, setIsAudioOn, wallet,
           </span>
           <span className="text-slate-400">|</span>
           <span className="text-emerald-400 flex items-center gap-1">
-            <TrendingUp size={12} /> SPRM $0.420 (+69.42%)
+            <TrendingUp size={12} /> $SPRM $0.420 (+69.42%)
           </span>
           <span className="text-slate-400">|</span>
           <span className="text-amber-400">FLOOR: 0.088 ETH</span>
           <span className="text-slate-400">|</span>
           <span className="text-cyan-400">TOTAL VOLUME: 420.69 ETH</span>
           <span className="text-slate-400">|</span>
-          <span className="text-purple-400">MINTED: 742 / 1,000</span>
+          <span className="text-purple-400">TOTAL SUPPLY: 1,000 BROKERS</span>
           <span className="text-slate-400">|</span>
           <span className="text-rose-400">GAS: 0.0001 GWEI</span>
           <span className="text-slate-400">|</span>
-          <span className="text-hood-green font-semibold">1/1 GOLDEN GOD AVAILABLE IN POOL</span>
+          <span className="text-hood-green font-semibold">1/1 GOLDEN GOD ARCHIVED IN VAULT</span>
           {/* Repeat for seamless loop */}
           <span className="text-slate-400">|</span>
           <span className="flex items-center gap-1.5 text-hood-green font-bold">
@@ -57,7 +51,7 @@ export default function Navbar({ lang, setLang, isAudioOn, setIsAudioOn, wallet,
           </span>
           <span className="text-slate-400">|</span>
           <span className="text-emerald-400 flex items-center gap-1">
-            <TrendingUp size={12} /> SPRM $0.420 (+69.42%)
+            <TrendingUp size={12} /> $SPRM $0.420 (+69.42%)
           </span>
           <span className="text-slate-400">|</span>
           <span className="text-amber-400">FLOOR: 0.088 ETH</span>
@@ -99,7 +93,7 @@ export default function Navbar({ lang, setLang, isAudioOn, setIsAudioOn, wallet,
                 onClick={() => sound.playClick()}
                 className="text-sm font-medium text-slate-300 hover:text-hood-green transition-colors py-1 relative group"
               >
-                {lang === 'ru' ? link.labelRu : link.labelEn}
+                {link.label}
                 <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-hood-green group-hover:w-full transition-all duration-300 rounded-full"></span>
               </a>
             ))}
@@ -110,7 +104,7 @@ export default function Navbar({ lang, setLang, isAudioOn, setIsAudioOn, wallet,
             {/* Audio Toggle */}
             <button
               onClick={toggleSound}
-              title={isAudioOn ? (lang === 'ru' ? 'Выключить звук' : 'Mute sound') : (lang === 'ru' ? 'Включить звук' : 'Enable sound')}
+              title={isAudioOn ? 'Mute sound' : 'Enable sound'}
               className={`p-2.5 rounded-xl border transition-all ${
                 isAudioOn 
                   ? 'border-hood-green/40 text-hood-green bg-hood-green/10 shadow-sm shadow-hood-green/30' 
@@ -118,15 +112,6 @@ export default function Navbar({ lang, setLang, isAudioOn, setIsAudioOn, wallet,
               }`}
             >
               {isAudioOn ? <Volume2 size={18} /> : <VolumeX size={18} />}
-            </button>
-
-            {/* Language Switcher */}
-            <button
-              onClick={toggleLanguage}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-white/10 bg-white/5 hover:border-white/25 text-slate-300 text-xs font-mono font-bold transition-all"
-            >
-              <Globe size={15} className="text-hood-green" />
-              <span>{lang.toUpperCase()}</span>
             </button>
 
             {/* Connect Wallet CTA */}
@@ -149,7 +134,7 @@ export default function Navbar({ lang, setLang, isAudioOn, setIsAudioOn, wallet,
               ) : (
                 <>
                   <Wallet size={17} />
-                  <span>{lang === 'ru' ? 'Кошелек' : 'Connect'}</span>
+                  <span>Connect Wallet</span>
                 </>
               )}
             </button>
@@ -182,27 +167,18 @@ export default function Navbar({ lang, setLang, isAudioOn, setIsAudioOn, wallet,
                 }}
                 className="p-3 rounded-lg bg-white/5 text-slate-200 font-medium text-sm hover:bg-hood-green/10 hover:text-hood-green transition"
               >
-                {lang === 'ru' ? link.labelRu : link.labelEn}
+                {link.label}
               </a>
             ))}
           </div>
 
           <div className="pt-4 border-t border-white/10 flex items-center justify-between gap-3">
-            <div className="flex gap-2">
-              <button
-                onClick={toggleSound}
-                className="p-2.5 rounded-xl border border-white/10 bg-white/5 text-slate-300"
-              >
-                {isAudioOn ? <Volume2 size={18} className="text-hood-green" /> : <VolumeX size={18} />}
-              </button>
-              <button
-                onClick={toggleLanguage}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-white/10 bg-white/5 text-slate-300 text-xs font-mono font-bold"
-              >
-                <Globe size={15} className="text-hood-green" />
-                <span>{lang.toUpperCase()}</span>
-              </button>
-            </div>
+            <button
+              onClick={toggleSound}
+              className="p-2.5 rounded-xl border border-white/10 bg-white/5 text-slate-300"
+            >
+              {isAudioOn ? <Volume2 size={18} className="text-hood-green" /> : <VolumeX size={18} />}
+            </button>
 
             <button
               onClick={() => {
@@ -213,7 +189,7 @@ export default function Navbar({ lang, setLang, isAudioOn, setIsAudioOn, wallet,
               className="flex-1 py-2.5 px-4 rounded-xl bg-hood-green text-black font-extrabold text-xs tracking-wider flex items-center justify-center gap-2"
             >
               <Wallet size={16} />
-              {wallet.connected ? `${wallet.address.slice(0, 6)}...` : (lang === 'ru' ? 'Подключить' : 'Connect')}
+              {wallet.connected ? `${wallet.address.slice(0, 6)}...` : 'Connect Wallet'}
             </button>
           </div>
         </div>

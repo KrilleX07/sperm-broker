@@ -1,16 +1,31 @@
 import React, { useState } from 'react';
-import { HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { HelpCircle, ChevronDown } from 'lucide-react';
 import { sound } from '../utils/sound';
 
-export default function FAQ({ lang, t }) {
+export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(0);
 
   const faqs = [
-    { q: t.faq.q1, a: t.faq.a1 },
-    { q: t.faq.q2, a: t.faq.a2 },
-    { q: t.faq.q3, a: t.faq.a3 },
-    { q: t.faq.q4, a: t.faq.a4 },
-    { q: t.faq.q5, a: t.faq.a5 },
+    {
+      q: "What is the Sperm Brokers NFT collection?",
+      a: "Sperm Brokers is an elite collection of 1,000 16-bit retro characters based on 11 iconic Wall Street archetypes, specifically engineered for the Robinhood Chain ecosystem."
+    },
+    {
+      q: "Which blockchain is the collection hosted on?",
+      a: "The collection resides natively on Robinhood Chain L2 (EVM compatible). Network transactions benefit from instant finality and fractions of a cent in gas fees."
+    },
+    {
+      q: "What utility and rights do holders receive?",
+      a: "Holders receive 100% full commercial intellectual property (IP) rights, upcoming $SPRM staking protocol yield, exclusive access to the VIP Whale Alpha Signals Discord, and guaranteed whitelist allocation for future ecosystem expansions."
+    },
+    {
+      q: "When will the $SPRM Staking Protocol launch?",
+      a: "Staking is scheduled for Phase 2 (Q2 2026). Once deployed, holders will be able to lock their brokers non-custodially to stream daily $SPRM dividends and earn secondary market royalty splits."
+    },
+    {
+      q: "Which Web3 wallets are supported?",
+      a: "We support Robinhood Wallet, MetaMask, Phantom, Coinbase Wallet, and 100+ other wallets via WalletConnect."
+    }
   ];
 
   const toggle = (idx) => {
@@ -26,10 +41,10 @@ export default function FAQ({ lang, t }) {
         <div className="text-center space-y-4 mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-hood-green/10 border border-hood-green/30 text-hood-green text-xs font-mono font-bold tracking-wider">
             <HelpCircle size={14} />
-            <span>{t.faq.badge}</span>
+            <span>KNOWLEDGE BASE</span>
           </div>
           <h2 className="text-4xl sm:text-5xl font-extrabold font-display text-white tracking-tight">
-            {t.faq.title}
+            Frequently Asked Questions
           </h2>
         </div>
 

@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { X, Download, Zap, Sparkles, Shield, Award, Quote, ExternalLink } from 'lucide-react';
+import { X, Download, Zap, Sparkles, Shield, Award, Quote } from 'lucide-react';
 import { sound } from '../utils/sound';
 
-export default function NFTModal({ nft, lang, t, onClose }) {
+export default function NFTModal({ nft, onClose }) {
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
@@ -83,10 +83,10 @@ export default function NFTModal({ nft, lang, t, onClose }) {
             {/* Quick action: Download button */}
             <button
               onClick={handleDownload}
-              className="mt-6 w-full py-3 px-4 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white font-mono text-xs font-bold flex items-center justify-center gap-2 transition duration-200"
+              className="mt-6 w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-hood-green to-emerald-400 hover:from-emerald-400 hover:to-hood-green text-black font-mono text-xs font-extrabold flex items-center justify-center gap-2 shadow-lg shadow-hood-green/20 transition duration-200"
             >
-              <Download size={15} />
-              <span>{t.modal.downloadAvatar}</span>
+              <Download size={16} />
+              <span>Download HD Avatar</span>
             </button>
           </div>
 
@@ -101,7 +101,7 @@ export default function NFTModal({ nft, lang, t, onClose }) {
                 </span>
                 <span className="text-slate-500">•</span>
                 <span className="text-xs font-mono text-slate-400">
-                  {t.modal.score} <span className="text-white font-bold">{nft.rarityScore}</span>
+                  Rarity Score: <span className="text-white font-bold">{nft.rarityScore}</span>
                 </span>
               </div>
               <h3 className="text-3xl font-extrabold font-display text-white">
@@ -116,7 +116,7 @@ export default function NFTModal({ nft, lang, t, onClose }) {
             <div className="p-4 rounded-2xl bg-black/50 border border-white/10 relative">
               <Quote className="absolute top-3 left-3 text-white/10" size={28} />
               <p className="relative z-10 text-sm italic text-slate-200 pl-6">
-                {nft.quote[lang]}
+                {nft.quote.en}
               </p>
             </div>
 
@@ -126,7 +126,7 @@ export default function NFTModal({ nft, lang, t, onClose }) {
                 Biography / Lore
               </h4>
               <p className="text-sm text-slate-300 leading-relaxed">
-                {nft.description[lang]}
+                {nft.description.en}
               </p>
             </div>
 
@@ -137,14 +137,14 @@ export default function NFTModal({ nft, lang, t, onClose }) {
                   <Zap size={20} />
                 </div>
                 <div>
-                  <div className="text-xs font-mono text-slate-400">{t.modal.stakingTitle}</div>
+                  <div className="text-xs font-mono text-slate-400">Passive $SPRM Staking Yield</div>
                   <div className="text-lg font-bold text-hood-green font-mono">
                     +{nft.stakingYield} $SPRM / day
                   </div>
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-[11px] font-mono text-slate-400">{t.modal.multiplier}</div>
+                <div className="text-[11px] font-mono text-slate-400">Yield Multiplier:</div>
                 <div className="text-base font-extrabold text-cyber-gold font-mono">
                   {nft.stakingMultiplier}
                 </div>
@@ -154,7 +154,7 @@ export default function NFTModal({ nft, lang, t, onClose }) {
             {/* Traits Breakdown */}
             <div className="space-y-3">
               <h4 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">
-                {t.modal.traitsTitle}
+                Attributes & Traits
               </h4>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -176,25 +176,15 @@ export default function NFTModal({ nft, lang, t, onClose }) {
             </div>
 
             {/* Footer Action */}
-            <div className="pt-4 border-t border-white/10 flex items-center gap-3">
-              <a
-                href="#mint"
-                onClick={() => {
-                  sound.playCash();
-                  onClose();
-                }}
-                className="flex-1 py-3 px-4 rounded-xl bg-hood-green text-black font-extrabold text-xs font-mono tracking-wider text-center hover:bg-emerald-400 transition"
-              >
-                {t.modal.mintSimilar}
-              </a>
+            <div className="pt-4 border-t border-white/10 flex items-center justify-end gap-3">
               <button
                 onClick={() => {
                   sound.playClick();
                   onClose();
                 }}
-                className="py-3 px-5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-300 font-mono text-xs font-bold transition"
+                className="w-full py-3.5 px-6 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 font-mono text-xs font-bold transition text-center"
               >
-                {t.modal.close}
+                Close Dossier
               </button>
             </div>
 

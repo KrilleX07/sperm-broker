@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Layers, ShieldAlert, Sparkles, Check } from 'lucide-react';
 import { sound } from '../utils/sound';
 
-export default function TraitMatrix({ lang }) {
+export default function TraitMatrix() {
   const categories = [
     {
       name: "Outfits & Suits",
@@ -75,12 +75,10 @@ export default function TraitMatrix({ lang }) {
             <span>RARITY ARCHITECTURE</span>
           </div>
           <h2 className="text-4xl sm:text-5xl font-extrabold font-display text-white tracking-tight">
-            {lang === 'ru' ? 'Матрица Трейтов и Редкостей' : 'Trait Matrix & Distribution'}
+            Trait Matrix & Distribution
           </h2>
           <p className="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">
-            {lang === 'ru' 
-              ? 'Каждый персонаж Sperm Brokers обладает уникальным набором атрибутов, влияющих на его ранг и доходность в пуле стейкинга.'
-              : 'Every Sperm Broker is mathematically synthesized with procedural properties that determine its collector rank and yield multipliers.'}
+            Every Sperm Broker is mathematically synthesized with procedural properties that determine its collector rank and prospective yield multipliers.
           </p>
         </div>
 
