@@ -1,18 +1,8 @@
-import React, { useState } from 'react';
-import { Copy, Check, Send, ExternalLink, ShieldCheck, Heart } from 'lucide-react';
+import React from 'react';
+import { ExternalLink } from 'lucide-react';
 import { sound } from '../utils/sound';
 
 export default function Footer() {
-  const [copied, setCopied] = useState(false);
-  const contractAddress = "0x742d35Cc6634C0532925a3b844Bc454e4438f44e";
-
-  const handleCopyContract = () => {
-    sound.playCash();
-    navigator.clipboard.writeText(contractAddress);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
     <footer className="border-t border-white/10 bg-[#04060A] text-slate-400 py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -35,24 +25,6 @@ export default function Footer() {
             <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
               Official generative 16-bit retro NFT collection of 1,000 unique Wall Street brokers engineered for the Robinhood Chain ecosystem.
             </p>
-
-            {/* Contract copy bar */}
-            <div className="pt-2">
-              <div className="text-[11px] font-mono text-slate-500 mb-1.5 flex items-center gap-1.5">
-                <ShieldCheck size={13} className="text-hood-green" />
-                <span>Robinhood Verified Contract:</span>
-              </div>
-              <div className="inline-flex items-center gap-2 p-2 rounded-xl bg-[#0D111A] border border-white/10 font-mono text-xs text-slate-300">
-                <span>0x742d...f44e</span>
-                <button
-                  onClick={handleCopyContract}
-                  className="p-1 rounded-lg bg-white/5 hover:bg-white/15 text-hood-green transition"
-                  title="Copy contract"
-                >
-                  {copied ? <Check size={14} /> : <Copy size={14} />}
-                </button>
-              </div>
-            </div>
           </div>
 
           {/* Quick Links */}
@@ -106,36 +78,20 @@ export default function Footer() {
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => sound.playClick()}
-                className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0D111A] border border-white/10 hover:border-hood-green/50 text-slate-200 text-xs font-mono transition"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0D111A] border border-white/10 hover:border-hood-green/50 text-white text-xs font-mono font-bold transition hover:scale-105"
               >
-                <span>𝕏 Twitter</span>
-              </a>
-              <a
-                href="https://discord.com"
-                target="_blank"
-                rel="noreferrer"
-                onClick={() => sound.playClick()}
-                className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0D111A] border border-white/10 hover:border-hood-green/50 text-slate-200 text-xs font-mono transition"
-              >
-                <span>Discord</span>
-              </a>
-              <a
-                href="https://telegram.org"
-                target="_blank"
-                rel="noreferrer"
-                onClick={() => sound.playClick()}
-                className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0D111A] border border-white/10 hover:border-hood-green/50 text-slate-200 text-xs font-mono transition"
-              >
-                <span>Telegram</span>
+                <span className="text-base leading-none">𝕏</span>
+                <span>X</span>
               </a>
               <a
                 href="https://opensea.io"
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => sound.playClick()}
-                className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0D111A] border border-white/10 hover:border-hood-green/50 text-slate-200 text-xs font-mono transition"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0D111A] border border-white/10 hover:border-hood-green/50 text-slate-200 text-xs font-mono font-bold transition hover:scale-105"
               >
                 <span>OpenSea</span>
+                <ExternalLink size={13} className="text-slate-400" />
               </a>
             </div>
 
