@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Check, Copy, Share2, ExternalLink, ArrowRight, Loader2, Sparkles, AlertCircle, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { Check, Copy, Share2, ExternalLink, ArrowRight, Loader2, Sparkles, AlertCircle, ShieldAlert, CheckCircle2, User } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { registerWhitelistUser, validateInviteCode, checkTwitterExists, checkWalletExists } from '../utils/supabase';
 import { fetchTwitterAvatar } from '../utils/avatar';
@@ -365,19 +365,18 @@ export default function AllowlistIntake() {
             {/* Live Twitter Avatar Preview Card (matching originalbrokers.art) */}
             {twitterUsername.replace('@', '').length >= 2 && (
               <div className="p-3 rounded-xl bg-[#04060A] border border-[#1E293B] flex items-center gap-3 animate-in fade-in slide-in-from-top-1 duration-200">
-                <div className="relative w-11 h-11 rounded-full overflow-hidden border border-[#00F58C]/40 flex-shrink-0 bg-black flex items-center justify-center">
+                <div className="relative w-11 h-11 rounded-full overflow-hidden border border-[#00F58C]/40 flex-shrink-0 bg-[#0e1626] flex items-center justify-center">
                   {avatarLoading ? (
                     <Loader2 size={16} className="text-[#00F58C] animate-spin" />
-                  ) : (
+                  ) : avatarUrl ? (
                     <img
-                      src={avatarUrl || `https://unavatar.io/x/${twitterUsername.replace('@', '')}`}
+                      src={avatarUrl}
                       alt={twitterUsername}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = `https://unavatar.io/x/${twitterUsername.replace('@', '')}`;
-                      }}
+                      onError={() => setAvatarUrl(null)}
                       className="w-full h-full object-cover"
                     />
+                  ) : (
+                    <User size={20} className="text-slate-400" />
                   )}
                 </div>
                 <div className="space-y-0.5 min-w-0">
