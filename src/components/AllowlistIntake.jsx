@@ -340,6 +340,32 @@ export default function AllowlistIntake() {
               />
             </div>
 
+            {/* Live Twitter Avatar Preview Card (matching originalbrokers.art) */}
+            {twitterUsername.replace('@', '').length >= 2 && (
+              <div className="p-3 rounded-xl bg-[#04060A] border border-[#1E293B] flex items-center gap-3 animate-in fade-in slide-in-from-top-1 duration-200">
+                <div className="relative w-10 h-10 rounded-full overflow-hidden border border-[#00F58C]/40 flex-shrink-0 bg-white/5">
+                  <img
+                    src={`https://unavatar.io/x/${twitterUsername.replace('@', '')}`}
+                    alt={twitterUsername}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = `https://api.dicebear.com/7.x/bottts/svg?seed=${twitterUsername}`;
+                    }}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="space-y-0.5 min-w-0">
+                  <div className="font-mono text-xs text-white font-bold truncate flex items-center gap-1.5">
+                    <span>{twitterUsername.startsWith('@') ? twitterUsername : `@${twitterUsername}`}</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#00F58C]"></span>
+                  </div>
+                  <div className="font-pixel text-[8px] text-slate-500 tracking-wider uppercase">
+                    X ACCOUNT
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Invite Code Field with Existence Check */}
             <div className="space-y-2">
               <div className="flex justify-between items-center">
